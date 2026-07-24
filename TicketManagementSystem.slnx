@@ -1,0 +1,31 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/01.Base/">
+    <Project Path="src/01.Base/TicketManagement.Base.csproj" />
+  </Folder>
+  <Folder Name="/src/02.Domain/">
+    <Project Path="src/02.Domain/TicketManagement.Domain.csproj" />
+  </Folder>
+  <Folder Name="/src/03.Shared/">
+    <Project Path="src/03.Shared/TicketManagement.Shared.csproj" />
+  </Folder>
+  <Folder Name="/src/04.Application/">
+    <Project Path="src/04.Application/TicketManagement.Application.csproj" />
+  </Folder>
+  <Folder Name="/src/05.Infrastructure/">
+    <Project Path="src/05.Infrastructure/TicketManagement.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/06.WebApi/">
+    <Project Path="src/06.WebApi/TicketManagement.WebApi.csproj" />
+  </Folder>
+  <Folder Name="/src/07.Client/">
+    <Project Path="src/07.Client/TicketManagement.Client.csproj" />
+  </Folder>
+  <Folder Name="/src/08.Bsui/">
+    <Project Path="src/08.Bsui/TicketManagement.Bsui.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TicketManagement.IntegrationTests/TicketManagement.IntegrationTests.csproj" />
+    <Project Path="tests/TicketManagement.UnitTests/TicketManagement.UnitTests.csproj" />
+  </Folder>
+</Solution>
