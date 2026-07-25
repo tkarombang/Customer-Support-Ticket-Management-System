@@ -3,6 +3,7 @@ using TicketManagement.Domain.Enums;
 using TicketManagement.Domain.Interfaces;
 using TicketManagement.Shared.Dtos.Reports;
 using TicketManagement.Shared.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace TicketManagement.Application.Services;
 
@@ -42,9 +43,10 @@ public class ReportService(
                 t.Title.Contains(term));
         }
 
-        var totalCount = query.Count();
+        var totalCount = await query
+            .CountAsync();
 
-        var items = query
+        var items = await query
             .OrderByDescending(t => t.CreatedDate)
             .Skip((filter.PageNumber - 1) * filter.PageSize)
             .Take(filter.PageSize)
@@ -61,7 +63,7 @@ public class ReportService(
                 CreatedDate = t.CreatedDate,
                 UpdatedDate = t.UpdatedDate
             })
-            .ToList();
+            .ToListAsync();
 
         return new PagedResult<ManagerReportItemDto>
         {
