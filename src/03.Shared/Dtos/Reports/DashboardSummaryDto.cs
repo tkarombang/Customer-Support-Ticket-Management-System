@@ -12,7 +12,7 @@ public class DashboardSummaryDto
 
 public class AgentWorkloadDto
 {
-    public int UserId { get; set; }
+    public Guid UserId { get; set; }
     public required string AgentName { get; set; }
     public int AssignedTicketCount { get; set; }
 }

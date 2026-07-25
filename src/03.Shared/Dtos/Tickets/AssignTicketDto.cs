@@ -5,5 +5,5 @@ namespace TicketManagement.Shared.Dtos.Tickets;
 public class AssignTicketDto
 {
     [Required]
-    public int AssignedToUserId { get; set; }
+    public Guid AssignedToUserId { get; set; }
 }
