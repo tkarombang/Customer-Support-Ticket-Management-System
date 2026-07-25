@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using TicketManagement.Domain.Entities;
+using TicketManagement.Domain.Enums;
 
 namespace TicketManagement.Infrastructure.Persistence.Configurations;
 
@@ -23,5 +24,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasConversion<string>()
             .HasMaxLength(20)
             .IsRequired();
+
     }
 }
