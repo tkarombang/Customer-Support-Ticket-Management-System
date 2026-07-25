@@ -4,7 +4,7 @@ namespace TicketManagement.Domain.Interfaces;
 
 public interface ITicketRepository
 {
-    Task<Ticket?> GetByIdAsync(int id);
+    Task<Ticket?> GetByIdAsync(Guid id);
     Task<IEnumerable<Ticket>> GetAllAsync();
     Task<Ticket> AddAsync(Ticket ticket);
     Task UpdateAsync(Ticket ticket);

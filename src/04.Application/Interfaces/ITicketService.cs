@@ -5,8 +5,8 @@ namespace TicketManagement.Application.Interfaces;
 public interface ITicketService
 {
     Task<IEnumerable<TicketResponseDto>> GetAllAsync();
-    Task<TicketResponseDto> GetByIdAsync(int id);
+    Task<TicketResponseDto> GetByIdAsync(Guid id);
     Task<TicketResponseDto> CreateAsync(CreateTicketDto dto);
-    Task<TicketResponseDto> UpdateAsync(int id, UpdateTicketDto dto, int changedByUserId);
-    Task<TicketResponseDto> AssignAsync(int id, AssignTicketDto dto, int changedByUserId);
+    Task<TicketResponseDto> UpdateAsync(Guid id, UpdateTicketDto dto, Guid changedByUserId);
+    Task<TicketResponseDto> AssignAsync(Guid id, AssignTicketDto dto, Guid changedByUserId);
 }

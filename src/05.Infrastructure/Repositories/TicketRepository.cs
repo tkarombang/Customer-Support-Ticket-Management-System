@@ -7,7 +7,7 @@ namespace TicketManagement.Infrastructure.Repositories;
 
 public class TicketRepository(ApplicationDbContext context) : ITicketRepository
 {
-    public async Task<Ticket?> GetByIdAsync(int id) =>
+    public async Task<Ticket?> GetByIdAsync(Guid id) =>
         await context.Tickets
             .Include(t => t.AssignedAgent)
             .Include(t => t.Histories)

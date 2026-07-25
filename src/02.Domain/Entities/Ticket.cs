@@ -17,7 +17,7 @@ public class Ticket : BaseEntity
 
     public TicketStatus Status { get; set; } = TicketStatus.Open;
 
-    public int? AssignedTo { get; set; }
+    public Guid? AssignedTo { get; set; }
 
     // Navigation properties
     public User? AssignedAgent { get; set; }

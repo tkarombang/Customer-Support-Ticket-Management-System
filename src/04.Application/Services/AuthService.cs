@@ -37,7 +37,7 @@ public class AuthService(
         };
     }
 
-    private (string Token, DateTime ExpiresAt) GenerateJwtToken(int userId, string name, string role)
+    private (string Token, DateTime ExpiresAt) GenerateJwtToken(Guid userId, string name, string role)
     {
         var jwtSettings = configuration.GetSection("JwtSettings");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Secret"]!));

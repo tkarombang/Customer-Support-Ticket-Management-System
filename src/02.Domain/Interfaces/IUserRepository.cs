@@ -5,7 +5,7 @@ namespace TicketManagement.Domain.Interfaces;
 
 public interface IUserRepository
 {
-    Task<User?> GetByIdAsync(int id);
+    Task<User?> GetByIdAsync(Guid id);
     Task<User?> GetByEmailAsync(string email);
-    Task<bool> ExistsWithRoleAsync(int userId, UserRole role);
+    Task<bool> ExistsWithRoleAsync(Guid userId, UserRole role);
 }

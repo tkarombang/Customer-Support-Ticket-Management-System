@@ -18,7 +18,7 @@ public class TicketService(
         return tickets.Select(MapToDto);
     }
 
-    public async Task<TicketResponseDto> GetByIdAsync(int id)
+    public async Task<TicketResponseDto> GetByIdAsync(Guid id)
     {
         var ticket = await ticketRepository.GetByIdAsync(id)
             ?? throw new NotFoundException("Ticket", id);
@@ -45,7 +45,7 @@ public class TicketService(
         return MapToDto(created);
     }
 
-    public async Task<TicketResponseDto> UpdateAsync(int id, UpdateTicketDto dto, int changedByUserId)
+    public async Task<TicketResponseDto> UpdateAsync(Guid id, UpdateTicketDto dto, Guid changedByUserId)
     {
         var ticket = await ticketRepository.GetByIdAsync(id)
             ?? throw new NotFoundException("Ticket", id);
@@ -79,7 +79,7 @@ public class TicketService(
         return MapToDto(ticket);
     }
 
-    public async Task<TicketResponseDto> AssignAsync(int id, AssignTicketDto dto, int changedByUserId)
+    public async Task<TicketResponseDto> AssignAsync(Guid id, AssignTicketDto dto, Guid changedByUserId)
     {
         var ticket = await ticketRepository.GetByIdAsync(id)
             ?? throw new NotFoundException("Ticket", id);
