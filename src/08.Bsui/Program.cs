@@ -1,7 +1,27 @@
+using TicketManagement.Client.Interfaces;
+using TicketManagement.Client.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddHttpClient<ITicketApiClient, TicketApiClient>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["WebApiBaseUrl"]!);
+});
+
+
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(8);
+});
+builder.Services.AddDistributedMemoryCache(); // dibutuhkan Session
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "RequestVerificationToken";
+});
 
 var app = builder.Build();
 
@@ -14,8 +34,9 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseStaticFiles();
 app.UseRouting();
+app.UseSession();
 
 app.UseAuthorization();
 

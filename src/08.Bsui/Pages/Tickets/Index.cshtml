@@ -1,0 +1,39 @@
+﻿@page
+@model TicketManagement.Bsui.Pages.Tickets.IndexModel
+@{
+    ViewData["Title"] = "Tickets";
+}
+
+<h2>Daftar Tiket</h2>
+
+<button id="btnShowCreate" class="btn btn-success mb-3">+ Tiket Baru</button>
+
+<!-- Form Create (hidden by default) -->
+<div id="createForm" class="card p-3 mb-3" style="display:none;">
+    <div class="mb-2"><input id="customerName" class="form-control" placeholder="Nama Customer" /></div>
+    <div class="mb-2"><input id="customerEmail" class="form-control" placeholder="Email Customer" /></div>
+    <div class="mb-2"><input id="title" class="form-control" placeholder="Judul Isu" /></div>
+    <div class="mb-2"><textarea id="description" class="form-control" placeholder="Deskripsi"></textarea></div>
+    <button id="btnSubmitCreate" class="btn btn-primary">Simpan</button>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>No. Tiket</th>
+            <th>Customer</th>
+            <th>Judul</th>
+            <th>Status</th>
+            <th>Agent</th>
+            <th>Aksi</th>
+        </tr>
+    </thead>
+    <tbody id="ticketTableBody"></tbody>
+</table>
+
+@section Scripts {
+    <script>
+        const currentRole = '@Model.Role';
+    </script>
+    <script src="~/js/tickets.js"></script>
+}
