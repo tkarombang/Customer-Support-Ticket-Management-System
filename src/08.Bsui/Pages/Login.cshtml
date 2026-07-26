@@ -1,0 +1,25 @@
+﻿@page
+@Html.AntiForgeryToken()
+@model TicketManagement.Bsui.Pages.LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<h2>Login</h2>
+
+@if (Model.ErrorMessage != null)
+{
+    <div class="alert alert-danger">@Model.ErrorMessage</div>
+}
+
+<form method="post">
+    <div class="mb-3">
+        <label>Email</label>
+        <input asp-for="Input.Email" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label>Password</label>
+        <input asp-for="Input.Password" type="password" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
