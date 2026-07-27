@@ -24,5 +24,6 @@ public static class ApiRoutes
     {
         public const string Base = $"{ApiRoutes.Base}/reports";
         public const string ManagerSegment = "manager";
+        public const string ManagerReport = "manager-report";
     }
 }
