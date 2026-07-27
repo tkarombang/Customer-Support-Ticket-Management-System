@@ -1,6 +1,15 @@
 ﻿let currentPage = 1;
 
 function loadReport(page = 1) {
+    Swal.fire({
+        title: 'Memuat Data...',
+        html: 'Mohon tunggu sebentar.',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
     currentPage = page;
 
     const params = {
@@ -17,11 +26,22 @@ function loadReport(page = 1) {
         method: 'GET',
         data: params,
         success: function (result) {
+            Swal.close();
             renderTable(result.items);
             renderPagination(result.pageNumber, result.totalPages);
         },
         error: function (xhr) {
-            alert('Gagal memuat data: ' + xhr.status);
+            Swal.close();
+            if (xhr.status === 401) {
+                window.location.href = '/Login';
+                return
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Gagal memuat Report. (' + xhr.status + ')'
+                });
+            }
         }
     });
 }

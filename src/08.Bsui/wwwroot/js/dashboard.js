@@ -1,13 +1,32 @@
 ﻿function loadDashboard() {
+    Swal.fire({
+        title: 'Memuat Data...',
+        html: 'Mohon tunggu sebentar.',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
     $.ajax({
         url: '/dashboard?handler=Summary',
         method: 'GET',
         success: function (summary) {
+            Swal.close();
             renderSummary(summary);
         },
         error: function (xhr) {
-            if (xhr.status === 401) window.location.href = '/Login';
-            else alert('Gagal memuat dashboard: ' + xhr.status);
+            Swal.close();
+            if (xhr.status === 401) {
+                window.location.href = '/Login';
+                return
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Gagal memuat Dashboard. (' + xhr.status + ')'
+                });
+            }
         }
     });
 }
