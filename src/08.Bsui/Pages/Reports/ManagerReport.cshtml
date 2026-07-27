@@ -7,9 +7,16 @@
 <h2>Manager Report</h2>
 
 <div class="row mb-3">
-    <div class="col"><input type="date" id="startDate" class="form-control" /></div>
-    <div class="col"><input type="date" id="endDate" class="form-control" /></div>
     <div class="col">
+        <label for="startDate" class="form-label fw-semibold">Start Date</label>
+        <input type="date" id="startDate" class="form-control" />
+    </div>
+    <div class="col">
+        <label for="endDate" class="form-label fw-semibold">End Date</label>
+        <input type="date" id="endDate" class="form-control" />
+    </div>
+    <div class="col">
+        <label for="status" class="form-label fw-semibold">Status</label>
         <select id="status" class="form-control">
             <option value="">Semua Status</option>
             <option value="Open">Open</option>
@@ -18,8 +25,13 @@
             <option value="Closed">Closed</option>
         </select>
     </div>
-    <div class="col"><input type="text" id="searchTerm" class="form-control" placeholder="Cari tiket..." /></div>
-    <div class="col"><button id="btnFilter" class="btn btn-primary">Filter</button></div>
+    <div class="col">
+        <label for="searchTerm" class="form-label fw-semibold">Search Tiket</label>
+        <input type="text" id="searchTerm" class="form-control" placeholder="input Id Ticket..." />
+    </div>
+    <div class="col d-flex align-items-end">
+        <button id="btnFilter" class="btn btn-primary">Filter</button>
+    </div>
 </div>
 
 <table class="table table-bordered">
