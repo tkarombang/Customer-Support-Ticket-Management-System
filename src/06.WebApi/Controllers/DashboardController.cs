@@ -7,22 +7,14 @@ using TicketManagement.Shared.Dtos.Reports;
 namespace TicketManagement.WebApi.Controllers;
 
 [ApiController]
-[Route(ApiRoutes.Reports.Base)]
+[Route(ApiRoutes.Dashboard.Base)]
 [Authorize(Roles = RoleConstants.Manager)]
 public class DashboardController(IReportService reportService) : ControllerBase
 {
-    [HttpGet(ApiRoutes.Reports.ManagerSegment)]
+    [HttpGet(ApiRoutes.Dashboard.summary)]
     public async Task<IActionResult> GetSummary()
     {
         var summary = await reportService.GetDashboardSummaryAsync();
         return Ok(summary);
-    }
-
-    [HttpGet(ApiRoutes.Reports.ManagerReport)]
-    public async Task<IActionResult> GetManagerReport(
-    [FromQuery] ManagerReportFilterDto filter)
-    {
-        var result = await reportService.GetManagerReportAsync(filter);
-        return Ok(result);
     }
 }

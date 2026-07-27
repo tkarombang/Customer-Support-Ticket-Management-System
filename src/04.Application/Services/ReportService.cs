@@ -12,6 +12,33 @@ public class ReportService(
     ITicketRepository ticketRepository)
     : IReportService
 {
+
+    public async Task<DashboardSummaryDto> GetDashboardSummaryAsync()
+    {
+        var tickets = (await ticketRepository.GetAllAsync()).ToList();
+
+        var workload = tickets
+            .Where(t => t.AssignedTo.HasValue && t.AssignedAgent != null)
+            .GroupBy(t => new { t.AssignedTo, t.AssignedAgent!.Name })
+            .Select(g => new AgentWorkloadDto
+            {
+                UserId = g.Key.AssignedTo!.Value,
+                AgentName = g.Key.Name,
+                AssignedTicketCount = g.Count()
+            })
+            .ToList();
+
+        return new DashboardSummaryDto
+        {
+            TotalTickets = tickets.Count,
+            OpenCount = tickets.Count(t => t.Status == TicketStatus.Open),
+            InProgressCount = tickets.Count(t => t.Status == TicketStatus.InProgress),
+            ResolvedCount = tickets.Count(t => t.Status == TicketStatus.Resolved),
+            ClosedCount = tickets.Count(t => t.Status == TicketStatus.Closed),
+            WorkloadPerAgent = workload
+        };
+    }
+
     public async Task<PagedResult<ManagerReportItemDto>> GetManagerReportAsync(ManagerReportFilterDto filter)
     {
         // REQ-3.2: query dibentuk sebagai IQueryable agar filter di-apply
@@ -23,7 +50,7 @@ public class ReportService(
             query = query.Where(t => t.CreatedDate >= filter.StartDate.Value);
 
         if (filter.EndDate.HasValue)
-            query = query.Where(t => t.CreatedDate <= filter.EndDate.Value);
+            query = query.Where(t => t.CreatedDate <= filter.EndDate.Value.Date.AddDays(1));
 
         if (!string.IsNullOrWhiteSpace(filter.Status)
             && Enum.TryParse<TicketStatus>(filter.Status.Replace(" ", ""), out var status))
@@ -74,29 +101,5 @@ public class ReportService(
         };
     }
 
-    public async Task<DashboardSummaryDto> GetDashboardSummaryAsync()
-    {
-        var tickets = (await ticketRepository.GetAllAsync()).ToList();
-
-        var workload = tickets
-            .Where(t => t.AssignedTo.HasValue && t.AssignedAgent != null)
-            .GroupBy(t => new { t.AssignedTo, t.AssignedAgent!.Name })
-            .Select(g => new AgentWorkloadDto
-            {
-                UserId = g.Key.AssignedTo!.Value,
-                AgentName = g.Key.Name,
-                AssignedTicketCount = g.Count()
-            })
-            .ToList();
-
-        return new DashboardSummaryDto
-        {
-            TotalTickets = tickets.Count,
-            OpenCount = tickets.Count(t => t.Status == TicketStatus.Open),
-            InProgressCount = tickets.Count(t => t.Status == TicketStatus.InProgress),
-            ResolvedCount = tickets.Count(t => t.Status == TicketStatus.Resolved),
-            ClosedCount = tickets.Count(t => t.Status == TicketStatus.Closed),
-            WorkloadPerAgent = workload
-        };
-    }
+    
 }

@@ -5,6 +5,6 @@ namespace TicketManagement.Application.Interfaces;
 
 public interface IReportService
 {
-    Task<PagedResult<ManagerReportItemDto>> GetManagerReportAsync(ManagerReportFilterDto filter);
     Task<DashboardSummaryDto> GetDashboardSummaryAsync();
+    Task<PagedResult<ManagerReportItemDto>> GetManagerReportAsync(ManagerReportFilterDto filter);
 }
