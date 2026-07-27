@@ -67,7 +67,7 @@ public class IndexModel(ITicketApiClient apiClient) : PageModel
     }
 
     // AJAX: PUT /Tickets?handler=Assign&id=1 (khusus Manager)
-    public async Task<JsonResult> OnPutAssignAsync(int id, [FromBody] AssignTicketDto dto)
+    public async Task<JsonResult> OnPutAssignAsync(Guid id, [FromBody] AssignTicketDto dto)
     {
         var token = HttpContext.Session.GetString("Token");
         var role = HttpContext.Session.GetString("Role");

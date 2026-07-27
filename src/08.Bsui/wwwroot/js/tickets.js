@@ -1,13 +1,33 @@
 ﻿function loadTickets() {
+    Swal.fire({
+        title: 'Memuat Data...',
+        html: 'Mohon tunggu sebentar.',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
     $.ajax({
         url: '/Tickets?handler=List',
         method: 'GET',
         success: function (tickets) {
+            Swal.close();
             renderTickets(tickets);
         },
         error: function (xhr) {
-            if (xhr.status === 401) window.location.href = '/Login';
-            else alert('Gagal memuat tiket: ' + xhr.status);
+            Swal.close();
+            if (xhr.status === 401) {
+                window.location.href = '/Login';
+                return
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Gagal memuat tiket. (' + xhr.status + ')'
+                });
+            }
         }
     });
 }
@@ -36,7 +56,7 @@ function renderTickets(tickets) {
                 <button class="btn btn-sm btn-primary btn-save-status" data-id="${t.ticketId}">Simpan</button>
             `;
             if (currentRole === 'Manager') {
-                actionHtml += `<input type="number" class="form-control form-control-sm assign-input" data-id="${t.ticketId}" placeholder="ID Agent" style="width:90px;display:inline-block;" />
+                actionHtml += `<input class="form-control form-control-sm assign-input" data-id="${t.ticketId}" placeholder="ID Agent" style="width:90px;display:inline-block;" />
                 <button class="btn btn-sm btn-secondary btn-assign" data-id="${t.ticketId}">Assign</button>`;
             }
         } else {
@@ -85,9 +105,18 @@ $(document).ready(function () {
             success: function () {
                 $('#createForm').hide();
                 loadTickets();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Done',
+                    text: 'Tiket Berhasil Dibuat'
+                });
             },
             error: function (xhr) {
-                alert('Gagal membuat tiket: ' + (xhr.responseJSON?.error ?? xhr.status));
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: xhr.responseJSON?.error ?? 'Gagal Membuat Tiket.'
+                });
             }
         });
     });
@@ -105,9 +134,18 @@ $(document).ready(function () {
             data: JSON.stringify({ status: status, description: description }),
             success: function () {
                 loadTickets();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: 'Status tiket berhasil diperbarui.'
+                });
             },
             error: function (xhr) {
-                alert('Gagal update: ' + (xhr.responseJSON?.error ?? xhr.status));
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: xhr.responseJSON?.error ?? 'Gagal memperbarui tiket.'
+                });
             }
         });
     });
@@ -118,7 +156,11 @@ $(document).ready(function () {
         const agentId = row.find('.assign-input').val();
 
         if (!agentId) {
-            alert('Isi ID Agent terlebih dahulu.');
+            Swal.fire({
+                icon: 'warning',
+                title: 'Empty Field',
+                text: 'Id Agent Tidak di Input.'
+            });
             return;
         }
 
@@ -126,12 +168,26 @@ $(document).ready(function () {
             url: `/Tickets?handler=Assign&id=${id}`,
             method: 'PUT',
             contentType: 'application/json',
-            data: JSON.stringify({ assignedToUserId: parseInt(agentId) }),
+            data: JSON.stringify({ assignedToUserId: agentId }),
             success: function () {
+                $('#createForm').hide()
                 loadTickets();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil',
+                    text: 'Tiket berhasil dibuat.',
+                    confirmButtonText: 'OK'
+                });
+
             },
             error: function (xhr) {
-                alert('Gagal assign: ' + (xhr.responseJSON?.error ?? xhr.status));
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: xhr.responseJSON?.error ?? 'Gagal membuat tiket.',
+                    confirmButtonText: 'OK'
+                });
             }
         });
     });
