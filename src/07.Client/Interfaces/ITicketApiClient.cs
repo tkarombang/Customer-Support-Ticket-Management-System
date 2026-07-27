@@ -11,7 +11,7 @@ public interface ITicketApiClient
     Task<IEnumerable<TicketResponseDto>?> GetTicketsAsync(string token);
     Task<TicketResponseDto?> CreateTicketAsync(CreateTicketDto dto, string token);
     Task<TicketResponseDto?> UpdateTicketAsync(Guid id, UpdateTicketDto dto, string token);
-    Task<TicketResponseDto?> AssignTicketAsync(int id, AssignTicketDto dto, string token);
+    Task<TicketResponseDto?> AssignTicketAsync(Guid id, AssignTicketDto dto, string token);
     Task<PagedResult<ManagerReportItemDto>?> GetManagerReportAsync(ManagerReportFilterDto filter, string token);
     Task<DashboardSummaryDto?> GetDashboardSummaryAsync(string token);
 }

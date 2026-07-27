@@ -45,7 +45,7 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
         return await response.Content.ReadFromJsonAsync<TicketResponseDto>(JsonOptions);
     }
 
-    public async Task<TicketResponseDto?> AssignTicketAsync(int id, AssignTicketDto dto, string token)
+    public async Task<TicketResponseDto?> AssignTicketAsync(Guid id, AssignTicketDto dto, string token)
     {
         AttachToken(token);
         var response = await httpClient.PutAsJsonAsync($"api/tickets/{id}/assign", dto);
@@ -66,7 +66,7 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
         query["PageNumber"] = filter.PageNumber.ToString();
         query["PageSize"] = filter.PageSize.ToString();
 
-        return await httpClient.GetFromJsonAsync<PagedResult<ManagerReportItemDto>>($"api/reports/manager?{query}");
+        return await httpClient.GetFromJsonAsync<PagedResult<ManagerReportItemDto>>($"api/reports/manager-report?{query}");
     }
 
     public async Task<DashboardSummaryDto?> GetDashboardSummaryAsync(string token)
