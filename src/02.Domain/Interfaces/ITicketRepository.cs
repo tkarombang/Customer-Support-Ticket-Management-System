@@ -9,5 +9,5 @@ public interface ITicketRepository
     Task<Ticket> AddAsync(Ticket ticket);
     Task UpdateAsync(Ticket ticket);
     Task<bool> TicketNumberExistsAsync(string ticketNumber);
-    Task<int> GetLastTicketSequenceAsync();
+    Task<int> GetNextTicketSequenceAsync(); // pakai TicketSequence, bukan urutan Id
 }
