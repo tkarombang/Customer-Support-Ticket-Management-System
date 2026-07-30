@@ -28,20 +28,44 @@ public class TicketService(
     public async Task<TicketResponseDto> CreateAsync(CreateTicketDto dto)
     {
         // REQ-2.2: Auto-generate TicketNumber format TKT-00001
-        var lastSequence = await ticketRepository.GetNextTicketSequenceAsync();
-        var ticketNumber = $"TKT-{(lastSequence + 1):D5}";
+        var nextSequence = await ticketRepository.GetNextTicketSequenceAsync();
+        var ticketNumber = $"TKT-{DateTime.UtcNow.Year}-{nextSequence:D4}"; // format ikut pola mockup: TCK-2026-1245
+
+        if (!Enum.TryParse<TicketType>(dto.Type, out var type))
+            throw new ValidationException("Type", $"Tipe '{dto.Type}' tidak valid.");
+        if (!Enum.TryParse<TicketImpact>(dto.Impact, out var impact))
+            throw new ValidationException("Impact", $"Impact '{dto.Impact}' tidak valid.");
+        if (!Enum.TryParse<TicketCategory>(dto.Category, out var category))
+            throw new ValidationException("Category", $"Kategori '{dto.Category}' tidak valid.");
+        if (!Enum.TryParse<TicketPriority>(dto.Priority, out var priority))
+            throw new ValidationException("Priority", $"Prioritas '{dto.Priority}' tidak valid.");
 
         var ticket = new Ticket
         {
             TicketNumber = ticketNumber,
+            Type = type,
+            Impact = impact,
+            Category = category,
+            ApplicationSystem = dto.ApplicationSystem,
+            Priority = priority,
+            DueDate = dto.DueDate,
             CustomerName = dto.CustomerName,
             CustomerEmail = dto.CustomerEmail,
             Title = dto.Title,
             Description = dto.Description,
-            Status = TicketStatus.Open // REQ-2.3
+            Status = TicketStatus.Open,
+            AssignedTo = dto.AssignedToUserId
         };
 
         var created = await ticketRepository.AddAsync(ticket);
+
+        if (dto.CcUserIds is { Count: > 0 })
+        {
+            foreach (var userId in dto.CcUserIds)
+                created.CcUsers.Add(new TicketCc { TicketId = created.Id, UserId = userId });
+            await ticketRepository.UpdateAsync(created);
+        }
+
         return MapToDto(created);
     }
 
