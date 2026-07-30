@@ -23,7 +23,8 @@ public static class DependencyInjection
             options.UseSqlServer(
                 configuration.GetConnectionString("DefaultConnection")));
 
-        //// Repository
+        // Repository
+        // --- Existing (v1, tetap dipakai) ---
         services.AddScoped<ITicketRepository, TicketRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IReportRepository, ReportRepository>();
@@ -31,6 +32,21 @@ public static class DependencyInjection
         services.AddScoped<ITicketService, TicketService>();
         services.AddScoped<IReportService, ReportService>();
         services.AddScoped<IAuthService, AuthService>();
+
+        // --- Baru (v2 — modul Users, Profile, Ticket Histories, dst) ---
+        services.AddScoped<ITicketHistoryRepository, TicketHistoryRepository>();
+        services.AddScoped<ISystemLogRepository, SystemLogRepository>();
+        services.AddScoped<IAppSettingRepository, AppSettingRepository>();
+        services.AddScoped<IIntegrationConfigRepository, IntegrationConfigRepository>();
+        services.AddScoped<IBackupRepository, BackupRepository>();
+        services.AddScoped<ITicketSequenceRepository, TicketSequenceRepository>();
+
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IProfileService, ProfileService>();
+        services.AddScoped<ISystemLogService, SystemLogService>();
+        services.AddScoped<ITicketHistoryService, TicketHistoryService>();
+
+        services.AddDataProtection(); // untuk CredentialEncryptor
 
         // --- JWT Authentication ---
         var jwtSettings = configuration.GetSection("JwtSettings");
