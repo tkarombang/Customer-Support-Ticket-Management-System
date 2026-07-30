@@ -14,58 +14,86 @@ public static class UserSeeder
         {
             new()
             {
-                Id = Guid.Parse("A1B2C3D4-E5F6-4A5B-8C9D-0E1F2A3B4C5D"),
-                Name = "Default Manager",
-                Email = "manager@ticket.com",
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Manager123!"),
-                Role = UserRole.Manager,
-                CreatedDate = new DateTime(2026,1,1)
+                Id = Guid.Parse("B2C3D4E5-F6A7-4B8C-9D0E-1F2A3B4C5D6E"),
+                Username = "admin",
+                Name = "System Administrator",
+                Email = "admin@ticket.com",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Admin123!"),
+                Role = UserRole.Administrator,
+                Status = UserStatus.Active,
+                CreatedDate = new DateTime(2026, 1, 1)
             },
 
             new()
             {
+                Id = Guid.Parse("A1B2C3D4-E5F6-4A5B-8C9D-0E1F2A3B4C5D"),
+                Username = "manager",
+                Name = "Default Manager",
+                Email = "manager@ticket.com",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Manager123!"),
+                Role = UserRole.Manager,
+                Status = UserStatus.Active,
+                CreatedDate = new DateTime(2026,1,1)
+            },
+
+             new()
+            {
                 Id = Guid.Parse("C3D4E5F6-A7B8-4C9D-8E1F-2A3B4C5D6E7F"),
+                Username = "agent1",
                 Name = "Agent One",
                 Email = "agent1@ticket.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Agent123!"),
                 Role = UserRole.SupportAgent,
-                CreatedDate = new DateTime(2026,1,1)
+                Status = UserStatus.Active,
+                CreatedDate = new DateTime(2026, 1, 1)
             },
+
             new()
             {
                 Id = Guid.Parse("D4E5F6A7-B8C9-4D1E-8F2A-3B4C5D6E7F80"),
+                Username = "agent2",
                 Name = "Agent Two",
                 Email = "agent2@ticket.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Agent123!"),
                 Role = UserRole.SupportAgent,
-                CreatedDate = new DateTime(2026,07,27)
+                Status = UserStatus.Active,
+                CreatedDate = new DateTime(2026, 1, 1)
             },
+
             new()
             {
                 Id = Guid.Parse("E5F6A7B8-C9D0-4E2F-8A3B-4C5D6E7F8091"),
+                Username = "agent3",
                 Name = "Agent Three",
                 Email = "agent3@ticket.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Agent123!"),
                 Role = UserRole.SupportAgent,
-                CreatedDate = new DateTime(2026,07,27)
+                Status = UserStatus.Active,
+                CreatedDate = new DateTime(2026, 1, 1)
             },
+
             new()
             {
                 Id = Guid.Parse("F6A7B8C9-D0E1-4F3A-8B4C-5D6E7F8091A2"),
+                Username = "agent4",
                 Name = "Agent Four",
                 Email = "agent4@ticket.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Agent123!"),
                 Role = UserRole.SupportAgent,
-                CreatedDate = new DateTime(2026,07,27)
+                Status = UserStatus.Active,
+                CreatedDate = new DateTime(2026, 1, 1)
             },
+
             new()
             {
                 Id = Guid.Parse("A7B8C9D0-E1F2-4A4B-8C5D-6E7F8091A2B3"),
+                Username = "agent5",
                 Name = "Agent Five",
                 Email = "agent5@ticket.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Agent123!"),
                 Role = UserRole.SupportAgent,
-                CreatedDate = new DateTime(2026,07,27)
+                Status = UserStatus.Active,
+                CreatedDate = new DateTime(2026, 1, 1)
             }
 
         };
