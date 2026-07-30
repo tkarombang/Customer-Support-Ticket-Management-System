@@ -50,4 +50,12 @@ public static class ApiRoutes
         public const string Password = "Password" ;
         public const string ActivityLog = "activity-log";
     }
+
+    public static class Settings
+    {
+        public const string Base = $"{ApiRoutes.Base}/settings";
+        public const string General = "general";
+        public const string Sla = "sla";
+
+    }
 }
