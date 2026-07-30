@@ -35,7 +35,7 @@ public class TicketRepository(ApplicationDbContext context) : ITicketRepository
     public async Task<bool> TicketNumberExistsAsync(string ticketNumber) =>
         await context.Tickets.AnyAsync(t => t.TicketNumber == ticketNumber);
 
-    public async Task<int> GetLastTicketSequenceAsync()
+    public async Task<int> GetNextTicketSequenceAsync()
     {
         var lastTicket = await context.Tickets
             .OrderByDescending(t => t.Id)
