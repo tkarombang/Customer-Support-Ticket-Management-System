@@ -28,7 +28,7 @@ public class TicketService(
     public async Task<TicketResponseDto> CreateAsync(CreateTicketDto dto)
     {
         // REQ-2.2: Auto-generate TicketNumber format TKT-00001
-        var lastSequence = await ticketRepository.GetLastTicketSequenceAsync();
+        var lastSequence = await ticketRepository.GetNextTicketSequenceAsync();
         var ticketNumber = $"TKT-{(lastSequence + 1):D5}";
 
         var ticket = new Ticket
@@ -68,7 +68,7 @@ public class TicketService(
             ticket.Histories.Add(new TicketHistory
             {
                 TicketId = ticket.Id,
-                Action = "StatusChanged",
+                Action = HistoryAction.StatusChanged,
                 PreviousStatus = previousStatus,
                 NewStatus = newStatus,
                 ChangedBy = changedByUserId
@@ -99,7 +99,7 @@ public class TicketService(
         ticket.Histories.Add(new TicketHistory
         {
             TicketId = ticket.Id,
-            Action = "Assigned",
+            Action = HistoryAction.StatusChanged,
             ChangedBy = changedByUserId
         });
 
