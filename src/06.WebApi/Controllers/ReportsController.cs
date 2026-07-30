@@ -8,7 +8,7 @@ namespace TicketManagement.WebApi.Controllers;
 
 [ApiController]
 [Route(ApiRoutes.Reports.Base)]
-[Authorize(Roles = RoleConstants.Manager)]
+[Authorize(Roles = RoleConstants.Administrator)]
 public class ReportsController(IReportService reportService) : ControllerBase
 {
 

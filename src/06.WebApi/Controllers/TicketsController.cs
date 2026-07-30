@@ -42,7 +42,7 @@ public class TicketsController(ITicketService ticketService) : ControllerBase
     }
 
     [HttpPut(ApiRoutes.Tickets.Assign)]
-    [Authorize(Roles = RoleConstants.Manager)] // REQ-2.6: hanya Manager
+    [Authorize(Roles = RoleConstants.Administrator)] // REQ-2.6: hanya Manager
     public async Task<ActionResult<TicketResponseDto>> Assign(Guid id, AssignTicketDto dto)
     {
         var userId = GetCurrentUserId();

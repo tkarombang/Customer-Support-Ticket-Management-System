@@ -8,7 +8,7 @@ namespace TicketManagement.WebApi.Controllers;
 
 [ApiController]
 [Route(ApiRoutes.Dashboard.Base)]
-[Authorize(Roles = RoleConstants.Manager)]
+[Authorize(Roles = RoleConstants.Administrator)]
 public class DashboardController(IReportService reportService) : ControllerBase
 {
     [HttpGet(ApiRoutes.Dashboard.summary)]
