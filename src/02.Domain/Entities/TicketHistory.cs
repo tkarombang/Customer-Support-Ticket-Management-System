@@ -10,7 +10,7 @@ public class TicketHistory : BaseEntity
     public TicketStatus? PreviousStatus { get; set; }
     public TicketStatus? NewStatus { get; set; }
     public Guid ChangedBy { get; set; } // FK -> User.Id
-
+    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
     public Ticket? Ticket { get; set; }
     public User? ChangedByUser { get; set; }
 }
