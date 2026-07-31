@@ -9,5 +9,9 @@ namespace TicketManagement.Application.Interfaces
 
         Task<SlaSettingDto> GetSlaAsync();
         Task UpdateSlaAsync(SlaSettingDto dto, Guid updatedBy);
+
+        Task<IEnumerable<IntegrationResponseDto>> GetIntegrationsAsync();
+        Task<IntegrationResponseDto> CreateIntegrationAsync(CreateIntegrationDto dto);
+        Task<IntegrationResponseDto> UpdateIntegrationAsync(Guid id, UpdateIntegrationDto dto);
     }
 }
