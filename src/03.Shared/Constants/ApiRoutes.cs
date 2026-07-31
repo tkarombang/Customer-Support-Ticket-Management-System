@@ -56,6 +56,8 @@ public static class ApiRoutes
         public const string Base = $"{ApiRoutes.Base}/settings";
         public const string General = "general";
         public const string Sla = "sla";
+        public const string Integrations = "integrations";
+        public const string IntegrationById = "integrations/{id:guid}";
         public const string Backup = "backup";
         public const string Restore = "restore";
         public const string SystemLogs = "system-logs";

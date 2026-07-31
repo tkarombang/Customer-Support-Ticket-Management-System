@@ -45,6 +45,27 @@ public class SettingsController(
         return NoContent();
     }
 
+    [HttpGet(ApiRoutes.Settings.Integrations)]
+    public async Task<IActionResult> GetIntegrations()
+    {
+        var result = await settingsService.GetIntegrationsAsync();
+        return Ok(result);
+    }
+
+    [HttpPost(ApiRoutes.Settings.Integrations)]
+    public async Task<IActionResult> CreateIntegration(CreateIntegrationDto dto)
+    {
+        var created = await settingsService.CreateIntegrationAsync(dto);
+        return Ok(created);
+    }
+
+    [HttpPut(ApiRoutes.Settings.IntegrationById)]
+    public async Task<IActionResult> UpdateIntegration(Guid id, UpdateIntegrationDto dto)
+    {
+        var updated = await settingsService.UpdateIntegrationAsync(id, dto);
+        return Ok(updated);
+    }
+
     private Guid GetCurrentUserId() =>
         Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
 
