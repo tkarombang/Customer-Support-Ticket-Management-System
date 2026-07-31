@@ -51,6 +51,10 @@ public static class DependencyInjection
         services.AddDataProtection(); // untuk CredentialEncryptor
         services.AddScoped<ICredentialEncryptor, CredentialEncryptor>();
 
+        services.AddScoped<IBackupHistoryRepository, BackupHistoryRepository>();
+        services.AddScoped<IBackupService, BackupService>();
+        services.AddScoped<ISystemLogQueryService, SystemLogQueryService>();
+
         // --- JWT Authentication ---
         var jwtSettings = configuration.GetSection("JwtSettings");
         var secretKey = jwtSettings["Secret"]!;
