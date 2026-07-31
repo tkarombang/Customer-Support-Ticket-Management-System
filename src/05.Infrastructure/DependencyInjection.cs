@@ -7,6 +7,7 @@ using System.Text;
 using TicketManagement.Application.Interfaces;
 using TicketManagement.Application.Services;
 using TicketManagement.Domain.Interfaces;
+using TicketManagement.Infrastructure.DataProtection;
 using TicketManagement.Infrastructure.Persistence;
 using TicketManagement.Infrastructure.Persistence.Seed;
 using TicketManagement.Infrastructure.Repositories;
@@ -45,8 +46,10 @@ public static class DependencyInjection
         services.AddScoped<IProfileService, ProfileService>();
         services.AddScoped<ISystemLogService, SystemLogService>();
         services.AddScoped<ITicketHistoryService, TicketHistoryService>();
+        services.AddScoped<ISettingsService, SettingsService>();
 
         services.AddDataProtection(); // untuk CredentialEncryptor
+        services.AddScoped<ICredentialEncryptor, CredentialEncryptor>();
 
         // --- JWT Authentication ---
         var jwtSettings = configuration.GetSection("JwtSettings");
