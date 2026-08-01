@@ -112,7 +112,7 @@ public class TicketService(
             throw new ValidationException("Status", "Tiket berstatus Closed tidak dapat di-assign ulang.");
 
         // REQ-2.6: assignee harus user terdaftar dengan role SupportAgent
-        var isValidAgent = await userRepository.ExistsWithRoleAsync(dto.AssignedToUserId, UserRole.SupportAgent);
+        var isValidAgent = await userRepository.ExistsWithRoleAsync(dto.AssignedToUserId, UserRole.Agent);
         if (!isValidAgent)
             throw new ValidationException("AssignedToUserId", "User tidak ditemukan atau bukan Support Agent.");
 
