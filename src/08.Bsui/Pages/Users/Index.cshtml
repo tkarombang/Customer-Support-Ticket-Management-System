@@ -1,23 +1,26 @@
 ﻿@page
-@Html.AntiForgeryToken()
 @model TicketManagement.Bsui.Pages.Users.IndexModel
 @{
     ViewData["Title"] = "Users";
+    ViewData["Active"] = "Users";
 }
 
 <h2>Users</h2>
 <p class="text-muted">Kelola pengguna sistem</p>
 
 <div class="row mb-3" id="summaryCards">
-    <div class="col"><div class="card text-center p-3"><h6>Total Users</h6><h3 id="totalUsers">-</h3></div></div>
-    <div class="col"><div class="card text-center p-3"><h6>Active</h6><h3 id="activeUsers">-</h3></div></div>
-    <div class="col"><div class="card text-center p-3"><h6>Inactive</h6><h3 id="inactiveUsers">-</h3></div></div>
+    <div class="col"><div class="card"><h6>Total Users</h6><h3 id="totalUsers">-</h3></div></div>
+    <div class="col"><div class="card"><h6>Active Users</h6><h3 id="activeUsers">-</h3></div></div>
+    <div class="col"><div class="card"><h6>Inactive Users</h6><h3 id="inactiveUsers">-</h3></div></div>
+    <div class="col"><div class="card"><h6>Role</h6><h3 id="roleCount">-</h3></div></div>
 </div>
 
-<button id="btnShowCreate" class="btn btn-primary mb-3">+ Tambah User</button>
+<div class="toolbar mb-3">
+    <button id="btnShowCreate" type="button" class="btn btn-primary">+ Tambah User</button>
+</div>
 
-<div id="createForm" class="card p-3 mb-3" style="display:none;">
-    <div class="row g-2">
+<div id="createForm" class="card mb-3" style="display:none;">
+    <div class="row">
         <div class="col"><input id="username" class="form-control" placeholder="Username" /></div>
         <div class="col"><input id="name" class="form-control" placeholder="Nama Lengkap" /></div>
         <div class="col"><input id="email" class="form-control" placeholder="Email" /></div>
@@ -29,16 +32,49 @@
                 <option value="Viewer">Viewer</option>
             </select>
         </div>
-        <div class="col-auto"><button type="button" id="btnSubmitCreate" class="btn btn-success">Simpan</button></div>
+        <div class="col" style="flex:0;">
+            <button id="btnSubmitCreate" type="button" class="btn btn-success">Simpan</button>
+        </div>
     </div>
 </div>
 
-<table class="table table-bordered">
+<div class="filter-bar mb-3">
+    <input id="searchTerm" class="form-control" placeholder="Cari nama, email, atau role..." style="max-width:280px;" />
+
+    <select id="filterRole" class="form-control" style="max-width:160px;">
+        <option value="">Semua Role</option>
+        <option value="Administrator">Administrator</option>
+        <option value="Agent">Agent</option>
+        <option value="Viewer">Viewer</option>
+    </select>
+
+    <select id="filterStatus" class="form-control" style="max-width:160px;">
+        <option value="">Semua Status</option>
+        <option value="Active">Active</option>
+        <option value="Inactive">Inactive</option>
+    </select>
+
+    <input id="filterDate" type="date" class="form-control" style="max-width:180px;" />
+
+    <button id="btnFilter" type="button" class="btn btn-secondary">Filter</button>
+    <button id="btnReset" type="button" class="btn btn-outline-secondary">Reset</button>
+</div>
+
+<table class="table">
     <thead>
-        <tr><th>Username</th><th>Nama</th><th>Email</th><th>Role</th><th>Status</th><th>Aksi</th></tr>
+        <tr>
+            <th>Username</th>
+            <th>Nama</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Aksi</th>
+        </tr>
     </thead>
     <tbody id="userTableBody"></tbody>
 </table>
+
+<div id="paginationInfo" class="text-muted mt-2" style="font-size:13px;"></div>
 
 @section Scripts {
     <script src="~/js/users.js"></script>

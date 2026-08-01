@@ -22,6 +22,7 @@ builder.Services.AddAntiforgery(options =>
 {
     options.HeaderName = "RequestVerificationToken";
 });
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 

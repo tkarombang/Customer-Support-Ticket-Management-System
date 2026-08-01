@@ -1,16 +1,63 @@
-﻿function loadUsers() {
+﻿let allUsers = [];
+
+function loadUsers() {
+    Swal.fire({
+        title: 'Memuat Data...',
+        html: 'Mohon tunggu sebentar.',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
     $.ajax({
         url: '/Users?handler=List',
         method: 'GET',
         success: function (users) {
-            renderUsers(users);
-            renderSummary(users);
+            Swal.close();
+            //renderUsers(users);
+            //renderSummary(users);
+            allUsers = users;
+            applyFilters();
         },
         error: function (xhr) {
-            if (xhr.status === 401) window.location.href = '/Login';
-            else alert('Gagal memuat users: ' + xhr.status);
+            Swal.close();
+            if (xhr.status === 401) {
+                window.location.href = '/Login';
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Gagal memuat users. (' + xhr.status + ')'
+                });
+            }
         }
     });
+}
+
+function applyFilters() {
+    const search = $('#searchTerm').val().toLowerCase().trim();
+    const role = $('#filterRole').val();
+    const status = $('#filterStatus').val();
+    const date = $('#filterDate').val();
+
+    let filtered = allUsers.filter(function (u) {
+        const matchSearch = !search ||
+            u.name.toLowerCase().includes(search) ||
+            u.email.toLowerCase().includes(search) ||
+            u.role.toLowerCase().includes(search);
+
+        const matchRole = !role || u.role === role;
+        const matchStatus = !status || u.status === status;
+        const matchDate = !date || u.createdDate.startsWith(date);
+
+        return matchSearch && matchRole && matchStatus && matchDate;
+    });
+
+    renderUsers(filtered);
+    renderSummary(allUsers); // summary cards tetap dari total keseluruhan, bukan hasil filter
+    $('#paginationInfo').text(`Menampilkan ${filtered.length} dari ${allUsers.length} pengguna`);
 }
 
 function renderSummary(users) {
@@ -30,8 +77,8 @@ function renderUsers(users) {
 
     users.forEach(function (u) {
         const statusBadge = u.status === 'Active'
-            ? '<span class="badge bg-success">Active</span>'
-            : '<span class="badge bg-secondary">Inactive</span>';
+            ? '<span class="badge bg-success text-white">Active</span>'
+            : '<span class="badge bg-secondary text-white">Inactive</span>';
 
         tbody.append(`
             <tr data-id="${u.userId}">
@@ -80,9 +127,18 @@ $(document).ready(function () {
             success: function () {
                 $('#createForm').hide();
                 loadUsers();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Done',
+                    text: 'User Berhasil Dibuat'
+                });
             },
             error: function (xhr) {
-                alert('Gagal membuat user: ' + (xhr.responseJSON?.error ?? xhr.status));
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: xhr.responseJSON?.error ?? 'Gagal Membuat Tiket.'
+                });
             }
         });
     });
@@ -96,10 +152,29 @@ $(document).ready(function () {
             headers: { 'RequestVerificationToken': getAntiForgeryToken() },
             success: function () {
                 loadUsers();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Done',
+                    text: 'User Berhasil Diupdate'
+                });
             },
             error: function (xhr) {
-                alert('Gagal ubah status: ' + xhr.status);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: xhr.responseJSON?.error ?? 'Gagal Membuat Tiket.'
+                });
             }
         });
+    });
+
+    $('#btnFilter').on('click', applyFilters);
+
+    $('#btnReset').on('click', function () {
+        $('#searchTerm').val('');
+        $('#filterRole').val('');
+        $('#filterStatus').val('');
+        $('#filterDate').val('');
+        applyFilters();
     });
 });
