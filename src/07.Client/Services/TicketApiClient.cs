@@ -3,9 +3,11 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Web;
 using TicketManagement.Client.Interfaces;
+using TicketManagement.Shared.Constants;
 using TicketManagement.Shared.Dtos.Auth;
 using TicketManagement.Shared.Dtos.Reports;
 using TicketManagement.Shared.Dtos.Tickets;
+using TicketManagement.Shared.Dtos.Users;
 using TicketManagement.Shared.Models;
 
 namespace TicketManagement.Client.Services;
@@ -73,6 +75,37 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
     {
         AttachToken(token);
         return await httpClient.GetFromJsonAsync<DashboardSummaryDto>("api/dashboard/summary");
+    }
+
+    public async Task<IEnumerable<UserResponseDto>?> GetUsersAsync(string token)
+    {
+        AttachToken(token);
+        return await httpClient.GetFromJsonAsync<IEnumerable<UserResponseDto>>(
+            $"{ApiRoutes.Users.Base}", JsonOptions);
+    }
+
+    public async Task<UserResponseDto?> CreateUserAsync(CreateUserDto dto, string token)
+    {
+        AttachToken(token);
+        var response = await httpClient.PostAsJsonAsync($"{ApiRoutes.Users.Base}", dto);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<UserResponseDto>(JsonOptions);
+    }
+
+    public async Task<UserResponseDto?> UpdateUserAsync(Guid id, UpdateUserDto dto, string token)
+    {
+        AttachToken(token);
+        var response = await httpClient.PutAsJsonAsync($"{ApiRoutes.Users.Base}/{id}", dto);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<UserResponseDto>(JsonOptions);
+    }
+
+    public async Task<UserResponseDto?> ToggleUserStatusAsync(Guid id, string token)
+    {
+        AttachToken(token);
+        var response = await httpClient.PutAsync($"{ApiRoutes.Users.Base}/{id}/status", null);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<UserResponseDto>(JsonOptions);
     }
 
     private void AttachToken(string token) =>
