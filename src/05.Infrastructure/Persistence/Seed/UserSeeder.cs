@@ -26,12 +26,12 @@ public static class UserSeeder
 
             new()
             {
-                Id = Guid.Parse("A1B2C3D4-E5F6-4A5B-8C9D-0E1F2A3B4C5D"),
-                Username = "manager",
-                Name = "Default Manager",
-                Email = "manager@ticket.com",
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Manager123!"),
-                Role = UserRole.Manager,
+                Id = Guid.Parse("7F3D9A2C-6B81-4E58-9F2A-3C7D8E1B5A94"),
+                Username = "Viewer",
+                Name = "Default Viewer",
+                Email = "viewer@ticket.com",
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword("Viewer123!"),
+                Role = UserRole.Viewer,
                 Status = UserStatus.Active,
                 CreatedDate = new DateTime(2026,1,1)
             },
@@ -43,7 +43,7 @@ public static class UserSeeder
                 Name = "Agent One",
                 Email = "agent1@ticket.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Agent123!"),
-                Role = UserRole.SupportAgent,
+                Role = UserRole.Agent,
                 Status = UserStatus.Active,
                 CreatedDate = new DateTime(2026, 1, 1)
             },
@@ -55,7 +55,7 @@ public static class UserSeeder
                 Name = "Agent Two",
                 Email = "agent2@ticket.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Agent123!"),
-                Role = UserRole.SupportAgent,
+                Role = UserRole.Agent,
                 Status = UserStatus.Active,
                 CreatedDate = new DateTime(2026, 1, 1)
             },
@@ -67,7 +67,7 @@ public static class UserSeeder
                 Name = "Agent Three",
                 Email = "agent3@ticket.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Agent123!"),
-                Role = UserRole.SupportAgent,
+                Role = UserRole.Agent,
                 Status = UserStatus.Active,
                 CreatedDate = new DateTime(2026, 1, 1)
             },
@@ -79,7 +79,7 @@ public static class UserSeeder
                 Name = "Agent Four",
                 Email = "agent4@ticket.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Agent123!"),
-                Role = UserRole.SupportAgent,
+                Role = UserRole.Agent,
                 Status = UserStatus.Active,
                 CreatedDate = new DateTime(2026, 1, 1)
             },
@@ -91,7 +91,7 @@ public static class UserSeeder
                 Name = "Agent Five",
                 Email = "agent5@ticket.com",
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword("Agent123!"),
-                Role = UserRole.SupportAgent,
+                Role = UserRole.Agent,
                 Status = UserStatus.Active,
                 CreatedDate = new DateTime(2026, 1, 1)
             }
