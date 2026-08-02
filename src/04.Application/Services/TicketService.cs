@@ -1,4 +1,5 @@
-﻿using TicketManagement.Application.Interfaces;
+﻿using Microsoft.AspNetCore.Http;
+using TicketManagement.Application.Interfaces;
 using TicketManagement.Base.Exceptions;
 using TicketManagement.Domain.Entities;
 using TicketManagement.Domain.Enums;
@@ -9,7 +10,9 @@ namespace TicketManagement.Application.Services;
 
 public class TicketService(
     ITicketRepository ticketRepository,
-    IUserRepository userRepository)
+    IUserRepository userRepository,
+    IFileStorageService fileStorageService,
+    ITicketAttachmentRepository attachmentRepository)
     : ITicketService
 {
     public async Task<IEnumerable<TicketResponseDto>> GetAllAsync()
@@ -129,6 +132,36 @@ public class TicketService(
 
         await ticketRepository.UpdateAsync(ticket);
         return MapToDto(ticket);
+    }
+
+    public async Task<TicketAttachmentResponseDto> UploadAttachmentAsync(Guid ticketId, IFormFile file, Guid uploadedBy)
+    {
+        var ticket = await ticketRepository.GetByIdAsync(ticketId)
+            ?? throw new NotFoundException("Ticket", ticketId);
+
+        var (filePath, fileSize) = await fileStorageService.SaveAsync(file, "attachments");
+
+        var attachment = new TicketAttachment
+        {
+            TicketId = ticketId,
+            FileName = file.FileName,
+            FilePath = filePath,
+            FileSizeBytes = fileSize,
+            ContentType = file.ContentType,
+            UploadedBy = uploadedBy
+        };
+
+        await attachmentRepository.AddAsync(attachment);
+
+        return new TicketAttachmentResponseDto
+        {
+            AttachmentId = attachment.Id,
+            FileName = attachment.FileName,
+            FilePath = attachment.FilePath,
+            FileSizeBytes = attachment.FileSizeBytes,
+            UploadedByName = "-", // diisi nanti kalau perlu join user
+            UploadedDate = attachment.CreatedDate
+        };
     }
 
     private static TicketResponseDto MapToDto(Ticket ticket) => new()

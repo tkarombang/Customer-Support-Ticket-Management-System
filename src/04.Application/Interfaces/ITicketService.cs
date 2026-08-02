@@ -1,4 +1,5 @@
-﻿using TicketManagement.Shared.Dtos.Tickets;
+﻿using Microsoft.AspNetCore.Http;
+using TicketManagement.Shared.Dtos.Tickets;
 
 namespace TicketManagement.Application.Interfaces;
 
@@ -9,4 +10,6 @@ public interface ITicketService
     Task<TicketResponseDto> CreateAsync(CreateTicketDto dto);
     Task<TicketResponseDto> UpdateAsync(Guid id, UpdateTicketDto dto, Guid changedByUserId);
     Task<TicketResponseDto> AssignAsync(Guid id, AssignTicketDto dto, Guid changedByUserId);
+    // ITicketService.cs — tambahan
+    Task<TicketAttachmentResponseDto> UploadAttachmentAsync(Guid ticketId, IFormFile file, Guid uploadedBy);
 }
