@@ -50,6 +50,15 @@ public class TicketsController(ITicketService ticketService) : ControllerBase
         return Ok(assigned);
     }
 
+    [HttpPost(ApiRoutes.Tickets.Attachments)]
+    [RequestSizeLimit(10_000_000)]
+    public async Task<IActionResult> UploadAttachment(Guid id, IFormFile file)
+    {
+        var userId = GetCurrentUserId();
+        var result = await ticketService.UploadAttachmentAsync(id, file, userId);
+        return Ok(result);
+    }
+
     private Guid GetCurrentUserId()
     {
         var value = User.FindFirstValue(ClaimTypes.NameIdentifier);

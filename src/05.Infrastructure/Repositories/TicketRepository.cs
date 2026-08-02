@@ -37,7 +37,9 @@ public class TicketRepository(ApplicationDbContext context) : ITicketRepository
 
     public async Task<int> GetNextTicketSequenceAsync()
     {
+        var year = DateTime.UtcNow.Year;
         var lastTicket = await context.Tickets
+            .Where(y => y.TicketNumber.StartsWith($"TKT-{year}"))
             .OrderByDescending(t => t.Id)
             .Select(t => t.TicketNumber)
             .FirstOrDefaultAsync();
@@ -46,6 +48,6 @@ public class TicketRepository(ApplicationDbContext context) : ITicketRepository
 
         // "TKT-00005" -> ambil angka setelah "TKT-"
         var numberPart = lastTicket.Split('-').Last();
-        return int.TryParse(numberPart, out var sequence) ? sequence : 0;
+        return int.TryParse(numberPart, out var sequence) ? sequence + 1 : 1;
     }
 }

@@ -1,5 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\02.Domain\TicketManagement.Domain.csproj" />
     <ProjectReference Include="..\03.Shared\TicketManagement.Shared.csproj" />
