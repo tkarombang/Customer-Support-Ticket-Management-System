@@ -7,8 +7,8 @@
     <title>@ViewData["Title"] - TicketManagement.Bsui</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/TicketManagement.Bsui.styles.css" asp-append-version="true" />
     @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> *@
-    @* <link rel="stylesheet" href="~/TicketManagement.Bsui.styles.css" asp-append-version="true" /> *@
 </head>
 <body>
     <div class="app-shell">
@@ -49,7 +49,7 @@
                 </a>
                 <a href="/Settings" class="nav-item @(ViewData["Active"]?.ToString() == "Settings" ? "active" : "")">
                     <span class="nav-icon">⚙</span>
-                    <span class="brand-text">Profile</span>
+                    <span class="brand-text">Settings</span>
                 </a>
             </nav>
 
@@ -84,10 +84,10 @@
     </footer>
     @Html.AntiForgeryToken()
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/site.js"></script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    @await RenderSectionAsync("Scripts", required: true)
+    <script src="~/js/site.js"></script>
+    @await RenderSectionAsync("Scripts", required: false) @* TIDAK SEMUA HALAMAN HARUS MEMILIKI JAVASCRIPT SENDIRI*@
+    @* <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script> *@
     @* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
 
 </body>

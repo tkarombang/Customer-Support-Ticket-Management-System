@@ -28,6 +28,23 @@ body {
     min-height: 100vh;
 }
 
+.error-message {
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    background: #fdecea;
+    color: #b42318;
+    border: 1px solid #f5c2c7;
+    border-radius: 6px;
+}
+
+.textbox {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d0d5dd;
+    border-radius: 6px;
+    box-sizing: border-box;
+}
+
 /* Sidebar */
 .sidebar {
     width: 240px;
