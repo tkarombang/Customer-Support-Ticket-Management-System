@@ -18,6 +18,7 @@ public static class ApiRoutes
         public const string ById = "{id:guid}";
         public const string Assign = $"{ById}/assign";
         public const string Report = "report";
+        public const string Attachments = $"{ById}/attachments";
     }
 
     public static class TicketHistories
