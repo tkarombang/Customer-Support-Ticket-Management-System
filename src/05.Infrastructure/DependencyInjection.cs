@@ -54,6 +54,8 @@ public static class DependencyInjection
         services.AddScoped<IBackupHistoryRepository, BackupHistoryRepository>();
         services.AddScoped<IBackupService, BackupService>();
         services.AddScoped<ISystemLogQueryService, SystemLogQueryService>();
+        services.AddScoped<IFileStorageService, FileStorageService>();
+        services.AddScoped<ITicketAttachmentRepository,  TicketAttachmentRepository>();
 
         // --- JWT Authentication ---
         var jwtSettings = configuration.GetSection("JwtSettings");
