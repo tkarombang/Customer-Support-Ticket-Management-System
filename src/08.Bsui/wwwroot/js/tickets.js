@@ -79,47 +79,42 @@ function renderTickets(tickets) {
 $(document).ready(function () {
     loadTickets();
 
-    $('#btnShowCreate').on('click', function () {
-        $('#createForm').toggle();
-    });
+    //$('#btnSubmitCreate').on('click', function () {
+    //    const dto = {
+    //        customerName: $('#customerName').val(),
+    //        customerEmail: $('#customerEmail').val(),
+    //        title: $('#title').val(),
+    //        description: $('#description').val()
+    //    };
+    //    function getAntiForgeryToken() {
+    //        return $('input[name="__RequestVerificationToken"]').val();
+    //    }
 
-    $('#btnSubmitCreate').on('click', function () {
-        const dto = {
-            customerName: $('#customerName').val(),
-            customerEmail: $('#customerEmail').val(),
-            title: $('#title').val(),
-            description: $('#description').val()
-        };
-        function getAntiForgeryToken() {
-            return $('input[name="__RequestVerificationToken"]').val();
-        }
-
-        $.ajax({
-            url: '/Tickets?handler=Create',
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(dto),
-            headers: {
-                'RequestVerificationToken': getAntiForgeryToken()
-            },
-            success: function () {
-                $('#createForm').hide();
-                loadTickets();
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Done',
-                    text: 'Tiket Berhasil Dibuat'
-                });
-            },
-            error: function (xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal',
-                    text: xhr.responseJSON?.error ?? 'Gagal Membuat Tiket.'
-                });
-            }
-        });
-    });
+    //    $.ajax({
+    //        url: '/Tickets?handler=Create',
+    //        method: 'POST',
+    //        contentType: 'application/json',
+    //        data: JSON.stringify(dto),
+    //        headers: {
+    //            'RequestVerificationToken': getAntiForgeryToken()
+    //        },
+    //        success: function () {
+    //            loadTickets();
+    //            Swal.fire({
+    //                icon: 'success',
+    //                title: 'Done',
+    //                text: 'Tiket Berhasil Dibuat'
+    //            });
+    //        },
+    //        error: function (xhr) {
+    //            Swal.fire({
+    //                icon: 'error',
+    //                title: 'Gagal',
+    //                text: xhr.responseJSON?.error ?? 'Gagal Membuat Tiket.'
+    //            });
+    //        }
+    //    });
+    //});
 
     $(document).on('click', '.btn-save-status', function () {
         const id = $(this).data('id');
@@ -170,7 +165,6 @@ $(document).ready(function () {
             contentType: 'application/json',
             data: JSON.stringify({ assignedToUserId: agentId }),
             success: function () {
-                $('#createForm').hide()
                 loadTickets();
 
                 Swal.fire({

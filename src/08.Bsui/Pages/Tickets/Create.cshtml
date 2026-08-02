@@ -1,0 +1,136 @@
+﻿@page
+@model TicketManagement.Bsui.Pages.Tickets.CreateModel
+@{
+    ViewData["Title"] = "Buat Tiket Baru";
+    ViewData["Active"] = "Tickets";
+}
+
+<div class="breadcrumb text-muted mb-2">Tickets &gt; Buat Tiket Baru</div>
+<h2>Buat Tiket Baru</h2>
+<p class="text-muted">Lengkapi informasi berikut untuk membuat tiket baru.</p>
+
+<div class="row" style="align-items:flex-start;">
+    <div class="col" style="flex:2;">
+        <div class="card mb-3">
+            <h6>Informasi Tiket</h6>
+
+            <div class="row mb-3">
+                <div class="col">
+                    <label>Tipe Tiket <span class="mandatory">*</span></label>
+                    <select id="type" class="form-control">
+                        <option value="Incident">Incident</option>
+                        <option value="Request">Request</option>
+                        <option value="Problem">Problem</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>Status Awal</label>
+                    <input class="form-control" value="Open" disabled />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col">
+                    <label>Kategori <span class="mandatory">*</span></label>
+                    <select id="category" class="form-control">
+                        <option value="Aplikasi">Aplikasi</option>
+                        <option value="Akses">Akses</option>
+                        <option value="Laporan">Laporan</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>Dampak <span class="mandatory">*</span></label>
+                    <select id="impact" class="form-control">
+                        <option value="SingleUser">Satu Pengguna</option>
+                        <option value="SebagianPengguna">Sebagian Pengguna</option>
+                        <option value="SemuaPengguna">Semua Pengguna</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col">
+                    <label>Prioritas <span class="mandatory">*</span></label>
+                    <select id="priority" class="form-control">
+                        <option value="Low">Low</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>Aplikasi / Sistem</label>
+                    <input id="applicationSystem" class="form-control" placeholder="mis. CRM Elnusa" />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label>Judul <span class="mandatory">*</span></label>
+                <input id="title" class="form-control" maxlength="255" placeholder="Masukkan judul tiket" />
+                <div class="text-muted" style="font-size:12px;"><span id="titleCount">0</span>/255 karakter</div>
+            </div>
+
+            <div class="mb-3">
+                <label>Deskripsi <span class="mandatory">*</span></label>
+                <textarea id="description" class="form-control" rows="6" maxlength="5000" placeholder="Jelaskan masalah atau permintaan Anda secara detail..."></textarea>
+                <div class="text-muted" style="font-size:12px;"><span id="descCount">0</span>/5000 karakter</div>
+            </div>
+
+            <div class="mb-3">
+                <label>Perkiraan Selesai (Due Date)</label>
+                <input id="dueDate" type="date" class="form-control" style="max-width:220px;" />
+            </div>
+
+            <div class="mb-3">
+                <label>Lampiran</label>
+                <input id="attachmentFiles" type="file" class="form-control" multiple
+                       accept=".png,.jpg,.jpeg,.pdf,.doc,.docx,.xls,.xlsx,.zip" />
+                <div class="text-muted" style="font-size:12px;">Maks. 10MB per file (PNG, JPG, PDF, DOC, DOCX, XLS, XLSX, ZIP)</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col" style="flex:1;">
+        <div class="card mb-3">
+            <h6>Informasi Kontak</h6>
+            <div class="mb-3">
+                <label>Nama Customer <span class="mandatory">*</span></label>
+                <input id="customerName" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label>Email Customer <span class="mandatory">*</span></label>
+                <input id="customerEmail" class="form-control" />
+            </div>
+        </div>
+
+        <div class="card mb-3">
+            <h6>Penugasan</h6>
+            <div class="mb-3">
+                <label>Assign To</label>
+                <select id="assignTo" class="form-control">
+                    <option value="">-- Belum ditentukan --</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label>CC (Opsional)</label>
+                <select id="ccUsers" class="form-control" multiple style="height:100px;"></select>
+                <div class="text-muted" style="font-size:12px;">Tahan Ctrl/Cmd untuk pilih lebih dari satu.</div>
+            </div>
+            <div class="info-note">
+                Tiket akan diberikan ke tim yang sesuai jika tidak ada penugasan khusus.
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-actions">
+    <span class="text-muted" style="font-size:12px;"><span class="mandatory">*</span> Wajib diisi</span>
+    <div>
+        <a href="/Tickets" class="btn btn-outline-secondary">Batal</a>
+        <button id="btnSubmit" type="button" class="btn btn-primary">Buat Tiket</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/ticket-create.js"></script>
+}
