@@ -108,6 +108,21 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
         return await response.Content.ReadFromJsonAsync<UserResponseDto>(JsonOptions);
     }
 
+    public async Task<TicketAttachmentResponseDto?> UploadAttachmentAsync(
+    Guid ticketId, Stream fileStream, string fileName, string contentType, string token)
+    {
+        AttachToken(token);
+
+        using var content = new MultipartFormDataContent();
+        using var streamContent = new StreamContent(fileStream);
+        streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(contentType);
+        content.Add(streamContent, "file", fileName);
+
+        var response = await httpClient.PostAsync($"{ApiRoutes.Tickets.Base}/{ticketId}/attachments", content);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<TicketAttachmentResponseDto>(JsonOptions);
+    }
+
     private void AttachToken(string token) =>
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 }

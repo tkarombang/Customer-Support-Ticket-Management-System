@@ -19,4 +19,5 @@ public interface ITicketApiClient
     Task<UserResponseDto?> CreateUserAsync(CreateUserDto dto, string token);
     Task<UserResponseDto?> UpdateUserAsync(Guid id, UpdateUserDto dto, string token);
     Task<UserResponseDto?> ToggleUserStatusAsync(Guid id, string token);
+    Task<TicketAttachmentResponseDto?> UploadAttachmentAsync(Guid ticketId, Stream fileStream, string fileName, string contentType, string token);
 }
