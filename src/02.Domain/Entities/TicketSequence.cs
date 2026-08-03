@@ -7,6 +7,7 @@
 /// </summary>
 public class TicketSequence
 {
-    public int Id { get; set; } = 1; // fixed, selalu 1 baris
+    public int Id { get; set; }
+    public int Year { get; set; }
     public int LastSequence { get; set; } = 0;
 }
