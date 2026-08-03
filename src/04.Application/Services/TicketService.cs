@@ -12,7 +12,8 @@ public class TicketService(
     ITicketRepository ticketRepository,
     IUserRepository userRepository,
     IFileStorageService fileStorageService,
-    ITicketAttachmentRepository attachmentRepository)
+    ITicketAttachmentRepository attachmentRepository,
+    ITicketSequenceRepository ticketSequenceRepository)
     : ITicketService
 {
     public async Task<IEnumerable<TicketResponseDto>> GetAllAsync()
@@ -31,8 +32,9 @@ public class TicketService(
     public async Task<TicketResponseDto> CreateAsync(CreateTicketDto dto)
     {
         // REQ-2.2: Auto-generate TicketNumber format TKT-00001
-        var nextSequence = await ticketRepository.GetNextTicketSequenceAsync();
-        var ticketNumber = $"TKT-{DateTime.UtcNow.Year}-{nextSequence:D4}"; // format ikut pola mockup: TCK-2026-1245
+        var currentYear = DateTime.UtcNow.Year;
+        var nextSequence = await ticketSequenceRepository.GetNextSequenceAsync(currentYear);
+        var ticketNumber = $"TKT-{currentYear}-{nextSequence:D4}";
 
         if (!Enum.TryParse<TicketType>(dto.Type, out var type))
             throw new ValidationException("Type", $"Tipe '{dto.Type}' tidak valid.");

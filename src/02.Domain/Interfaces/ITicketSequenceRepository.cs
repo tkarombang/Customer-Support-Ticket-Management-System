@@ -7,5 +7,5 @@ public interface ITicketSequenceRepository
     /// Implementasi harus pakai row-lock/transaction untuk hindari race condition
     /// saat 2 tiket dibuat bersamaan.
     /// </summary>
-    Task<int> GetNextSequenceAsync();
+    Task<int> GetNextSequenceAsync(int year);
 }
