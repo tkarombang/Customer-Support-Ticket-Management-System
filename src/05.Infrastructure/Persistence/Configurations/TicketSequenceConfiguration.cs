@@ -13,7 +13,7 @@ namespace TicketManagement.Infrastructure.Persistence.Configurations
         {
             builder.ToTable("TicketSequences");
             builder.HasKey(s => s.Id);
-            builder.HasData(new TicketSequence { Id = 1, LastSequence = 0 }); // seed 1 baris awal
+            builder.HasIndex(s => s.Year).IsUnique();
         }
     }
 }
