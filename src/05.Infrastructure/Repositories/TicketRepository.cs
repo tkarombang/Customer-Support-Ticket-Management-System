@@ -35,19 +35,19 @@ public class TicketRepository(ApplicationDbContext context) : ITicketRepository
     public async Task<bool> TicketNumberExistsAsync(string ticketNumber) =>
         await context.Tickets.AnyAsync(t => t.TicketNumber == ticketNumber);
 
-    public async Task<int> GetNextTicketSequenceAsync()
-    {
-        var year = DateTime.UtcNow.Year;
-        var lastTicket = await context.Tickets
-            .Where(y => y.TicketNumber.StartsWith($"TKT-{year}"))
-            .OrderByDescending(t => t.Id)
-            .Select(t => t.TicketNumber)
-            .FirstOrDefaultAsync();
+    //public async Task<int> GetNextTicketSequenceAsync()
+    //{
+    //    var year = DateTime.UtcNow.Year;
+    //    var lastTicket = await context.Tickets
+    //        .Where(y => y.TicketNumber.StartsWith($"TKT-{year}"))
+    //        .OrderByDescending(t => t.Id)
+    //        .Select(t => t.TicketNumber)
+    //        .FirstOrDefaultAsync();
 
-        if (lastTicket is null) return 0;
+    //    if (lastTicket is null) return 0;
 
-        // "TKT-00005" -> ambil angka setelah "TKT-"
-        var numberPart = lastTicket.Split('-').Last();
-        return int.TryParse(numberPart, out var sequence) ? sequence + 1 : 1;
-    }
+    //    // "TKT-00005" -> ambil angka setelah "TKT-"
+    //    var numberPart = lastTicket.Split('-').Last();
+    //    return int.TryParse(numberPart, out var sequence) ? sequence + 1 : 1;
+    //}
 }
