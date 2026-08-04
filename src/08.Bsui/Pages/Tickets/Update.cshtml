@@ -1,0 +1,122 @@
+﻿@page
+@model TicketManagement.Bsui.Pages.Tickets.UpdateModel
+@{
+    ViewData["Title"] = "Update Tiket";
+    ViewData["Active"] = "Tickets";
+}
+
+<div class="breadcrumb text-muted mb-2">Tickets &gt; <span id="ticketNumberBreadcrumb">-</span> &gt; Update Tiket</div>
+<h2>Update Tiket</h2>
+<p class="text-muted">Perbarui informasi dan status tiket.</p>
+
+<div class="row" style="align-items:flex-start;">
+    <div class="col" style="flex:2;">
+        <div class="card mb-3">
+            <h6>Informasi Tiket</h6>
+            <div class="row mb-3">
+                <div class="col"><label>Nomor Tiket</label><input id="ticketNumber" class="form-control" disabled /></div>
+                <div class="col"><label>Dibuat Oleh</label><input id="createdInfo" class="form-control" disabled /></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <label>Tipe Tiket *</label>
+                    <select id="type" class="form-control">
+                        <option value="Incident">Incident</option>
+                        <option value="Request">Request</option>
+                        <option value="Problem">Problem</option>
+                    </select>
+                </div>
+                <div class="col">
+                    <label>Dampak *</label>
+                    <select id="impact" class="form-control">
+                        <option value="SingleUser">Satu Pengguna</option>
+                        <option value="SebagianPengguna">Sebagian Pengguna</option>
+                        <option value="SemuaPengguna">Semua Pengguna</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <label>Kategori *</label>
+                    <select id="category" class="form-control">
+                        <option value="Aplikasi">Aplikasi</option>
+                        <option value="Akses">Akses</option>
+                        <option value="Laporan">Laporan</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+                <div class="col"><label>Aplikasi / Sistem</label><input id="applicationSystem" class="form-control" /></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col">
+                    <label>Prioritas *</label>
+                    <select id="priority" class="form-control">
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+                <div class="col"><label>Perkiraan Selesai</label><input id="dueDate" type="date" class="form-control" /></div>
+            </div>
+            <div class="mb-3"><label>Judul *</label><input id="title" class="form-control" maxlength="255" /></div>
+            <div class="mb-3"><label>Deskripsi *</label><textarea id="description" class="form-control" rows="6" maxlength="5000"></textarea></div>
+
+            <div class="mb-3">
+                <label>Lampiran</label>
+                <div id="attachmentList" class="text-muted" style="font-size:13px;">Memuat...</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col" style="flex:1;">
+        <div class="card mb-3">
+            <h6>Informasi Kontak</h6>
+            <div class="mb-2"><label>Nama Pelapor</label><input id="customerName" class="form-control" disabled /></div>
+            <div class="mb-2"><label>Email</label><input id="customerEmail" class="form-control" disabled /></div>
+        </div>
+
+        <div class="card mb-3">
+            <h6>Penugasan</h6>
+            <label>Assign To</label>
+            <select id="assignTo" class="form-control mb-2">
+                <option value="">-- Belum ditentukan --</option>
+            </select>
+            <button id="btnAssign" type="button" class="btn btn-secondary btn-sm">Update Assign</button>
+        </div>
+
+        <div class="card mb-3">
+            <h6>Perubahan Status</h6>
+            <div class="mb-2">
+                <div class="text-muted" style="font-size:12px;">Status Saat Ini</div>
+                <span id="currentStatusBadge" class="badge bg-primary">-</span>
+            </div>
+            <label>Status Baru *</label>
+            <select id="status" class="form-control mb-2">
+                <option value="Open">Open</option>
+                <option value="InProgress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Closed">Closed</option>
+                <option value="Cancelled">Cancelled</option>
+            </select>
+            <label>Catatan (Opsional)</label>
+            <textarea id="statusNote" class="form-control" rows="3" maxlength="1000" placeholder="Tambahkan catatan perubahan status..."></textarea>
+        </div>
+
+        <div class="card mb-3">
+            <h6>Riwayat Komentar</h6>
+            <div id="commentList" class="text-muted" style="font-size:13px;">Memuat...</div>
+        </div>
+    </div>
+</div>
+
+<div class="form-actions">
+    <a href="/Tickets" class="btn btn-outline-secondary">Batal</a>
+    <button id="btnSubmit" type="button" class="btn btn-primary">Simpan Perubahan</button>
+</div>
+
+@section Scripts {
+    <script>
+        const ticketId = '@Model.TicketId';
+    </script>
+    <script src="~/js/ticket-update.js"></script>
+}
