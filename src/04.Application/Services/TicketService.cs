@@ -85,8 +85,25 @@ public class TicketService(
 
         if (!Enum.TryParse<TicketStatus>(dto.Status.Replace(" ", ""), out var newStatus))
             throw new ValidationException("Status", $"Status '{dto.Status}' tidak valid.");
+        if (!Enum.TryParse<TicketType>(dto.Type, out var type))
+            throw new ValidationException("Type", $"Tipe '{dto.Type}' tidak valid.");
+        if (!Enum.TryParse<TicketImpact>(dto.Impact, out var impact))
+            throw new ValidationException("Impact", $"Impact '{dto.Impact}' tidak valid.");
+        if (!Enum.TryParse<TicketCategory>(dto.Category, out var category))
+            throw new ValidationException("Category", $"Kategori '{dto.Category}' tidak valid.");
+        if (!Enum.TryParse<TicketPriority>(dto.Priority, out var newPriority))
+            throw new ValidationException("Priority", $"Prioritas '{dto.Priority}' tidak valid.");
 
         var previousStatus = ticket.Status;
+        var previousPriority = ticket.Priority;
+
+        ticket.Type = type;
+        ticket.Impact = impact;
+        ticket.Category = category;
+        ticket.ApplicationSystem = dto.ApplicationSystem;
+        ticket.Priority = newPriority;
+        ticket.DueDate = dto.DueDate;
+        ticket.Title = dto.Title;
         ticket.Description = dto.Description;
         ticket.Status = newStatus;
         ticket.UpdatedDate = DateTime.UtcNow;
@@ -100,6 +117,35 @@ public class TicketService(
                 Action = HistoryAction.StatusChanged,
                 PreviousStatus = previousStatus,
                 NewStatus = newStatus,
+                ChangedBy = changedByUserId
+            });
+        }
+
+        // Histori perubahan prioritas (REQ-8.2)
+        if (previousPriority != newPriority)
+        {
+            ticket.Histories.Add(new TicketHistory
+            {
+                TicketId = ticket.Id,
+                Action = HistoryAction.PriorityChanged,
+                ChangedBy = changedByUserId
+            });
+        }
+
+        // Catatan opsional jadi comment (REQ-2.13)
+        if (!string.IsNullOrWhiteSpace(dto.StatusNote))
+        {
+            ticket.Comments.Add(new TicketComment
+            {
+                TicketId = ticket.Id,
+                Content = dto.StatusNote,
+                CreatedBy = changedByUserId
+            });
+
+            ticket.Histories.Add(new TicketHistory
+            {
+                TicketId = ticket.Id,
+                Action = HistoryAction.CommentAdded,
                 ChangedBy = changedByUserId
             });
         }
@@ -168,6 +214,12 @@ public class TicketService(
 
     private static TicketResponseDto MapToDto(Ticket ticket) => new()
     {
+        Type = ticket.Type.ToString(),
+        Impact = ticket.Impact.ToString(),
+        Category = ticket.Category.ToString(),
+        ApplicationSystem = ticket.ApplicationSystem,
+        Priority = ticket.Priority.ToString(),
+        DueDate = ticket.DueDate,
         TicketId = ticket.Id,
         TicketNumber = ticket.TicketNumber,
         CustomerName = ticket.CustomerName,
