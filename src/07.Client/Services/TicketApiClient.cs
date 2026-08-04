@@ -34,7 +34,7 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
     public async Task<TicketResponseDto?> GetTicketByIdAsync(Guid id, string token)
     {
         AttachToken(token);
-        return await httpClient.GetFromJsonAsync<TicketResponseDto>($"{ApiRoutes.Tickets.Base}/{id}");
+        return await httpClient.GetFromJsonAsync<TicketResponseDto>($"{ApiRoutes.Tickets.Base}/{id}", JsonOptions);
     }
 
     public async Task<TicketResponseDto?> CreateTicketAsync(CreateTicketDto dto, string token)
