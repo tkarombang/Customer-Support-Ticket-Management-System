@@ -84,4 +84,15 @@ public class IndexModel(ITicketApiClient apiClient) : PageModel
             return new JsonResult(new { error = ex.Message }) { StatusCode = 400 };
         }
     }
+
+    // AJAX: GET /Tickets?handler=Agents
+    public async Task<JsonResult> OnGetAgentsAsync()
+    {
+        var token = HttpContext.Session.GetString("Token");
+        if (string.IsNullOrEmpty(token)) return new JsonResult(new { error = "Unauthorized" }) { StatusCode = 401 };
+
+        var users = await apiClient.GetUsersAsync(token);
+        var agents = users?.Where(u => u.Role == "Agent" && u.Status == "Active");
+        return new JsonResult(agents);
+    }
 }

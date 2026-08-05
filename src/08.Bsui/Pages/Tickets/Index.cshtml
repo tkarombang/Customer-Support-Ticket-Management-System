@@ -2,25 +2,100 @@
 @model TicketManagement.Bsui.Pages.Tickets.IndexModel
 @{
     ViewData["Title"] = "Tickets";
+    ViewData["Active"] = "Tickets";
 }
 
-<h2>Daftar Tiket</h2>
+<h2>Tickets</h2>
+<div class="toolbar">
+    <p class="text-muted">Kelola dan Pantau Semua Tiket</p>
+    <a href="/Tickets/Create" class="btn btn-primary">+ Buat Tiket Baru</a>
+</div>
 
-<a href="/Tickets/Create" class="btn btn-primary mb-3 addTicket">+ Buat Tiket Baru</a>
+<div class="row mb-3" id="summaryCard">
+    <div class="col">
+        <div class="card">
+            <h6>Total Tickets</h6>
+            <h3 id="totalTickets">-</h3>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <h6>Open</h6>
+            <h3 id="openCount">-</h3>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <h6>In Progress</h6>
+            <h3 id="inProgressCount">-</h3>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <h6>Closed</h6>
+            <h3 id="closedCount">-</h3>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card">
+            <h6>Cancelled</h6>
+            <h3 id="cancelledCount">-</h3>
+        </div>
+    </div>
+</div>
+
+<div class="filter-bar mb-3">
+    <input id="searchTerm" class="form-control" placeholder="Cari nomor tiket, judul, customer..." style="max-width:260px;"/>
+
+    <select id="filterStatus" class="form-control" style="max-width:150px">
+        <option value="">Semua Status</option>
+        <option value="Open">Open</option>
+        <option value="InProgress">In Progress</option>
+        <option value="Resolved">Resolved</option>
+        <option value="Closed">Closed</option>
+        <option value="Cancelled">Cancelled</option>
+    </select>
+
+    <select id="filterAssignee" class="form-control" style="max-width:170px;">
+        <option value="">Semua Assignee</option>
+    </select>
+
+    <select id="filterPriority" class="form-control" style="max-width:140px;">
+        <option value="">Semua Prioritas</option>
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
+    </select>
+
+    <select id="filterCategory" class="form-control" style="max-width:150px;">
+        <option value="">Semua Kategori</option>
+        <option value="Aplikasi">Aplikasi</option>
+        <option value="Akses">Akses</option>
+        <option value="Laporan">Laporan</option>
+        <option value="Lainnya">Lainnya</option>
+    </select>
+
+    <button id="btnFilter" type="button" class="btn btn-secondary">Filter</button>
+    <button id="btnReset" type="button" class="btn btn-outline-secondary">Reset</button>
+</div>
 
 <table class="table table-bordered">
     <thead>
         <tr>
             <th>No. Tiket</th>
+            <th>Title</th>
             <th>Customer</th>
-            <th>Judul</th>
             <th>Status</th>
-            <th>Agent</th>
+            <th>Priority</th>
+            <th>Assignee</th>
+            <th>Created At</th>
             <th>Aksi</th>
         </tr>
     </thead>
     <tbody id="ticketTableBody"></tbody>
 </table>
+
+<div id="paginationInfo" class="text-muted mt-2" style="font-size:13px;"></div>
 
 @section Scripts {
     <script>
