@@ -1,0 +1,56 @@
+﻿@page
+@model TicketManagement.Bsui.Pages.TicketHistories.IndexModel
+@{
+    ViewData["Title"] = "Ticket Histories";
+    ViewData["Active"] = "TicketHistories";
+}
+
+<h2>Ticket Histories</h2>
+<p class="text-muted">Riwayat perubahan semua tiket</p>
+
+<div class="row mb-3" id="summaryCards">
+    <div class="col"><div class="card"><h6>Total Histories</h6><h3 id="totalHistories">-</h3></div></div>
+    <div class="col"><div class="card"><h6>Perubahan Status</h6><h3 id="statusChangedCount">-</h3></div></div>
+    <div class="col"><div class="card"><h6>Perubahan Assignee</h6><h3 id="assigneeChangedCount">-</h3></div></div>
+    <div class="col"><div class="card"><h6>Komentar / Catatan</h6><h3 id="commentCount">-</h3></div></div>
+</div>
+
+<div class="filter-bar mb-3">
+    <input id="searchTerm" class="form-control" placeholder="Cari nomor tiket, judul..." style="max-width:240px;" />
+
+    <input id="startDate" type="date" class="form-control" style="max-width:160px;" />
+    <input id="endDate" type="date" class="form-control" style="max-width:160px;" />
+
+    <select id="filterAction" class="form-control" style="max-width:180px;">
+        <option value="">Semua Jenis Action</option>
+        <option value="Created">Ticket Created</option>
+        <option value="StatusChanged">Status Changed</option>
+        <option value="AssigneeChanged">Assignee Changed</option>
+        <option value="PriorityChanged">Priority Changed</option>
+        <option value="CommentAdded">Comment Added</option>
+        <option value="TicketUpdated">Ticket Updated</option>
+    </select>
+
+    <select id="filterUser" class="form-control" style="max-width:160px;">
+        <option value="">Semua User</option>
+    </select>
+
+    <button id="btnFilter" type="button" class="btn btn-secondary">Filter</button>
+    <button id="btnReset" type="button" class="btn btn-outline-secondary">Reset</button>
+</div>
+
+<table class="table">
+    <thead>
+        <tr><th>Ticket Number</th><th>Action</th><th>Detail Perubahan</th><th>Changed By</th><th>Timestamp</th></tr>
+    </thead>
+    <tbody id="historyTableBody"></tbody>
+</table>
+
+<div class="pagination-bar mt-2">
+    <div id="paginationInfo" class="text-muted" style="font-size:13px;"></div>
+    <div id="paginationButtons"></div>
+</div>
+
+@section Scripts {
+    <script src="~/js/ticket-histories.js"></script>
+}
