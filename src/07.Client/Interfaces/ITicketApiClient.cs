@@ -1,5 +1,6 @@
 ﻿using TicketManagement.Shared.Dtos.Auth;
 using TicketManagement.Shared.Dtos.Reports;
+using TicketManagement.Shared.Dtos.TicketHistories;
 using TicketManagement.Shared.Dtos.Tickets;
 using TicketManagement.Shared.Dtos.Users;
 using TicketManagement.Shared.Models;
@@ -21,4 +22,5 @@ public interface ITicketApiClient
     Task<UserResponseDto?> ToggleUserStatusAsync(Guid id, string token);
     Task<TicketAttachmentResponseDto?> UploadAttachmentAsync(Guid ticketId, Stream fileStream, string fileName, string contentType, string token);
     Task<TicketResponseDto?> GetTicketByIdAsync(Guid id, string token);
+    Task<PagedResult<TicketHistoryItemDto>> GetTicketHistoriesAsync(TicketHistoryFilterDto filter, string token);
 }

@@ -2,10 +2,12 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Web;
+using TicketManagement.Base.Exceptions;
 using TicketManagement.Client.Interfaces;
 using TicketManagement.Shared.Constants;
 using TicketManagement.Shared.Dtos.Auth;
 using TicketManagement.Shared.Dtos.Reports;
+using TicketManagement.Shared.Dtos.TicketHistories;
 using TicketManagement.Shared.Dtos.Tickets;
 using TicketManagement.Shared.Dtos.Users;
 using TicketManagement.Shared.Models;
@@ -127,6 +129,29 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
         var response = await httpClient.PostAsync($"{ApiRoutes.Tickets.Base}/{ticketId}/attachments", content);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<TicketAttachmentResponseDto>(JsonOptions);
+    }
+
+    public async Task<PagedResult<TicketHistoryItemDto>> GetTicketHistoriesAsync(TicketHistoryFilterDto filter, string token)
+    {
+        AttachToken(token);
+
+        var query = HttpUtility.ParseQueryString(string.Empty);
+        if (filter.StartDate.HasValue)
+            query["StartDate"] = filter.StartDate.Value.ToString("O");
+        if (filter.EndDate.HasValue)
+            query["EndDate"] = filter.EndDate.Value.ToString("O");
+        if (!string.IsNullOrWhiteSpace(filter.Action))
+            query["Action"] = filter.Action;
+        if (filter.UserId.HasValue)
+            query["UserId"] = filter.UserId.Value.ToString();
+        if (!string.IsNullOrWhiteSpace(filter.SearchTerm))
+            query["SearchTerm"] = filter.SearchTerm;
+        query["PageNumber"] = filter.PageNumber.ToString();
+        query["PageSize"] = filter.PageSize.ToString();
+
+        return await httpClient.GetFromJsonAsync<PagedResult<TicketHistoryItemDto>>(
+            $"{ApiRoutes.TicketHistories.Base}?{query}", JsonOptions)
+            ?? new PagedResult<TicketHistoryItemDto>();
     }
 
     private void AttachToken(string token) =>
