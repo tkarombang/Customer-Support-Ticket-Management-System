@@ -274,6 +274,12 @@ body {
 .btn-secondary {
     background: #f1f5f9;
     color: #334155;
+    transition: 0.3s;
+}
+
+.btn-secondary:hover {
+    background-color: var(--hover-bg);
+    color: white;
 }
 
 .btn-outline-secondary {

@@ -116,7 +116,7 @@ function statusBadgeClass(status) {
 }
 
 function renderTickets(tickets) {
-    renderSummary(tickets)
+    //renderSummary(tickets)
     const tbody = $('#ticketTableBody');
     tbody.empty();
 
