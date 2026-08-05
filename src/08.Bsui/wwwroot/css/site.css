@@ -10,6 +10,7 @@
     --bg-body: #f8fafc;
     --card-border: #e2e8f0;
     --text-muted: #64748b;
+    --hover-bg: #36454F;
 }
 
 * {
@@ -86,6 +87,7 @@ body {
     display: flex;
     gap: 10px;
     align-items: center;
+    justify-content: space-between;
     flex-wrap: wrap;
 }
 
@@ -278,6 +280,12 @@ body {
     background: #fff;
     border: 1px solid var(--card-border);
     color: #334155;
+    transition: 0.3s;
+}
+
+.btn-outline-secondary:hover{
+    background-color: var(--hover-bg);
+    color: white;
 }
 
 .btn-sm {

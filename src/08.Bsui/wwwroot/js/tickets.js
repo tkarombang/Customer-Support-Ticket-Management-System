@@ -1,4 +1,22 @@
-﻿function loadTickets() {
+﻿let allTickets = [];
+
+$(document).ready(function () {
+    loadTickets()
+    loadAssigneeOptions()
+
+    $('#btnFilter').on('click', applyFilters);
+
+    $('#btnReset').on('click', function () {
+        $('#searchTerm').val('');
+        $('#filterStatus').val('');
+        $('#filterAssignee').val('');
+        $('#filterPriority').val('');
+        $('#filterCategory').val('');
+        applyFilters();
+    });
+});
+
+function loadTickets() {
     Swal.fire({
         title: 'Memuat Data...',
         html: 'Mohon tunggu sebentar.',
@@ -14,7 +32,8 @@
         method: 'GET',
         success: function (tickets) {
             Swal.close();
-            renderTickets(tickets);
+            allTickets = tickets
+            applyFilters()
         },
         error: function (xhr) {
             Swal.close();
@@ -32,7 +51,72 @@
     });
 }
 
+
+function loadAssigneeOptions() {
+    $.ajax({
+        url: '/Tickets?handler=Agents',
+        method: 'GET',
+        success: function (agents) {
+            const select = $('#filterAssignee')
+            agents.forEach(a => select.append(`<option value="${a.name}">${a.name}</option>`))
+        }
+    })
+}
+
+function applyFilters() {
+    const search = $('#searchTerm').val().toLowerCase().trim();
+    const status = $('#filterStatus').val();
+    const assignee = $('#filterAssignee').val();
+    const priority = $('#filterPriority').val();
+    const category = $('#filterCategory').val();
+
+    const filtered = allTickets.filter(function (t) {
+        const matchSearch = !search ||
+            t.ticketNumber.toLowerCase().includes(search) ||
+            t.title.toLowerCase().includes(search) ||
+            t.customerName.toLowerCase().includes(search);
+
+        const matchStatus = !status || t.status === status
+        const matchAssignee = !assignee || t.assignedToAgentName === assignee;
+        const matchPriority = !priority || t.priority === priority
+        const matchCategory = !category || t.category === category
+
+        return matchSearch && matchStatus && matchAssignee && matchPriority && matchCategory
+    })
+
+    renderSummary(allTickets)
+    renderTickets(filtered)
+    $('#paginationInfo').text(`Menampilkan ${filtered.length} dari ${allTickets.length} tiket`)
+}
+
+
+function renderSummary(tickets) {
+    $("#totalTickets").text(tickets.length)
+    $("#openCount").text(tickets.filter(t => t.status === "Open").length)
+    $("#inProgressCount").text(tickets.filter(t => t.status === "InProgress").length)
+    $("#closedCount").text(tickets.filter(t => t.status === "Clossed").length)
+    $("#cancelledCount").text(tickets.filter(t => t.status === "Cancelled").length)
+}
+
+function priorityBadgeClass(priority) {
+    if (priority === 'High') return 'bg-danger';
+    if (priority === 'Medium') return 'bg-warning';
+    return 'bg-secondary';
+}
+
+function statusBadgeClass(status) {
+    switch (status) {
+        case 'Open': return 'bg-primary';
+        case 'InProgress': return 'bg-warning';
+        case 'Resolved': return 'bg-success';
+        case 'Closed': return 'bg-secondary';
+        case 'Cancelled': return 'bg-danger';
+        default: return 'bg-secondary';
+    }
+}
+
 function renderTickets(tickets) {
+    renderSummary(tickets)
     const tbody = $('#ticketTableBody');
     tbody.empty();
 
@@ -42,147 +126,23 @@ function renderTickets(tickets) {
     }
 
     tickets.forEach(function (t) {
-        const isClosed = t.status === 'Closed';
-        const statusOptions = ['Open', 'InProgress', 'Resolved', 'Closed']
-            .map(s => `<option value="${s}" ${s === t.status ? 'selected' : ''}>${s}</option>`)
-            .join('');
-
-        let actionHtml = '';
-        if (!isClosed) {
-            actionHtml += `
-                <select class="form-select form-select-sm status-select" data-id="${t.ticketId}" ${isClosed ? 'disabled' : ''}>
-                    ${statusOptions}
-                </select>
-                <button class="btn btn-sm btn-primary btn-save-status" data-id="${t.ticketId}">Simpan</button>
-            `;
-            if (currentRole === 'Manager') {
-                actionHtml += `<input class="form-control form-control-sm assign-input" data-id="${t.ticketId}" placeholder="ID Agent" style="width:90px;display:inline-block;" />
-                <button class="btn btn-sm btn-secondary btn-assign" data-id="${t.ticketId}">Assign</button>`;
-            }
-        } else {
-            actionHtml = '<span class="text-muted">Closed (tidak dapat diubah)</span>';
-        }
+        const createdDate = new Date(t.createdDate).toLocaleDateString('id-ID', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        })
 
         tbody.append(`
-            <tr data-id="${t.ticketId}">
-                <td>${t.ticketNumber}</td>
-                <td>${t.customerName}</td>
+            <tr>
+                <td><a href="/Tickets/Update?id=${t.ticketId}">${t.ticketNumber}</a></td>
                 <td>${t.title}</td>
-                <td>${t.status}</td>
+                <td>${t.customerName}</td>
+                <td><span class="badge ${statusBadgeClass(t.status)}">${t.status}</span></td>
+                <td><span class="badge ${priorityBadgeClass(t.priority)}">${t.priority}</span></td>
                 <td>${t.assignedToAgentName ?? '-'}</td>
-                <td>${actionHtml}</td>
+                <td>${createdDate}</td>
+                <td><a href="/Tickets/Update?id=${t.ticketId}" class="btn btn-sm btn-outline-secondary">Update</a></td>
             </tr>
         `);
     });
 }
-
-$(document).ready(function () {
-    loadTickets();
-
-    //$('#btnSubmitCreate').on('click', function () {
-    //    const dto = {
-    //        customerName: $('#customerName').val(),
-    //        customerEmail: $('#customerEmail').val(),
-    //        title: $('#title').val(),
-    //        description: $('#description').val()
-    //    };
-    //    function getAntiForgeryToken() {
-    //        return $('input[name="__RequestVerificationToken"]').val();
-    //    }
-
-    //    $.ajax({
-    //        url: '/Tickets?handler=Create',
-    //        method: 'POST',
-    //        contentType: 'application/json',
-    //        data: JSON.stringify(dto),
-    //        headers: {
-    //            'RequestVerificationToken': getAntiForgeryToken()
-    //        },
-    //        success: function () {
-    //            loadTickets();
-    //            Swal.fire({
-    //                icon: 'success',
-    //                title: 'Done',
-    //                text: 'Tiket Berhasil Dibuat'
-    //            });
-    //        },
-    //        error: function (xhr) {
-    //            Swal.fire({
-    //                icon: 'error',
-    //                title: 'Gagal',
-    //                text: xhr.responseJSON?.error ?? 'Gagal Membuat Tiket.'
-    //            });
-    //        }
-    //    });
-    //});
-
-    $(document).on('click', '.btn-save-status', function () {
-        const id = $(this).data('id');
-        const row = $(this).closest('tr');
-        const status = row.find('.status-select').val();
-        const description = row.find('td').eq(2).text(); // pakai title lama sbg description sementara
-
-        $.ajax({
-            url: `/Tickets?handler=Update&id=${id}`,
-            method: 'PUT',
-            contentType: 'application/json',
-            data: JSON.stringify({ status: status, description: description }),
-            success: function () {
-                loadTickets();
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil',
-                    text: 'Status tiket berhasil diperbarui.'
-                });
-            },
-            error: function (xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal',
-                    text: xhr.responseJSON?.error ?? 'Gagal memperbarui tiket.'
-                });
-            }
-        });
-    });
-
-    $(document).on('click', '.btn-assign', function () {
-        const id = $(this).data('id');
-        const row = $(this).closest('tr');
-        const agentId = row.find('.assign-input').val();
-
-        if (!agentId) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Empty Field',
-                text: 'Id Agent Tidak di Input.'
-            });
-            return;
-        }
-
-        $.ajax({
-            url: `/Tickets?handler=Assign&id=${id}`,
-            method: 'PUT',
-            contentType: 'application/json',
-            data: JSON.stringify({ assignedToUserId: agentId }),
-            success: function () {
-                loadTickets();
-
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil',
-                    text: 'Tiket berhasil dibuat.',
-                    confirmButtonText: 'OK'
-                });
-
-            },
-            error: function (xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal',
-                    text: xhr.responseJSON?.error ?? 'Gagal membuat tiket.',
-                    confirmButtonText: 'OK'
-                });
-            }
-        });
-    });
-});
