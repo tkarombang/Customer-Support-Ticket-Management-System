@@ -21,10 +21,19 @@ public class IndexModel(ITicketApiClient apiClient) : PageModel
         return new JsonResult(result);
     }
 
+    // AJAX: GET /Reports?handler=Sla
     public async Task<JsonResult> OnGetSlaAsync(DateTime? startDate, DateTime? endDate)
     {
         var token = HttpContext.Session.GetString("Token");
         var result = await apiClient.GetSlaComplianceAsync(startDate, endDate, token!);
+        return new JsonResult(result);
+    }
+
+    // AJAX: GET /Reports?handler=ResponseTime
+    public async Task<JsonResult> OnGetResponseTimeAsync(DateTime? startDate, DateTime? endDate)
+    {
+        var token = HttpContext.Session.GetString("Token");
+        var result = await apiClient.GetResponseTimeAsync(startDate, endDate, token!);
         return new JsonResult(result);
     }
 
