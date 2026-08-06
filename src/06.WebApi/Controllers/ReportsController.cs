@@ -33,4 +33,13 @@ public class ReportsController(IReportService reportService) : ControllerBase
         var result = await reportService.GetResponseTimeAsync(startDate, endDate);
         return Ok(result);
     }
+
+    [HttpGet(ApiRoutes.Reports.Export)]
+    public async Task<IActionResult> Export([FromQuery] ManagerReportFilterDto filter)
+    {
+        var fileBytes = await reportService.ExportToExcelAsync(filter);
+        return File(fileBytes,
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            $"TicketReport_{DateTime.UtcNow:yyyyMMdd}.xlsx");
+    }
 }
