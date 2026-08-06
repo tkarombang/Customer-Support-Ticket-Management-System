@@ -9,7 +9,13 @@
         <h2>Reports</h2>
         <p class="text-muted">Laporan dan analisis data tiket</p>
     </div>
-    <button id="btnExport" type="button" class="btn btn-primary">⬇ Export</button>
+    <div class="toolbar-actions">
+        <input id="reportStartDate" type="date" class="form-control" style="max-width:150px;" />
+        <span class="text-muted">s/d</span>
+        <input id="reportEndDate" type="date" class="form-control" style="max-width:150px;" />
+        <button id="btnApplyDateRange" type="button" class="btn btn-secondary">Terapkan</button>
+        <button id="btnExport" type="button" class="btn btn-primary">⬇ Export</button>
+    </div>
 </div>
 
 <div class="tabs mb-3">
@@ -27,7 +33,20 @@
         <div class="col"><div class="card"><h6>Dalam Proses</h6><h3 id="ov-inprogress">-</h3></div></div>
         <div class="col"><div class="card"><h6>Closed / Cancelled</h6><h3 id="ov-closed">-</h3></div></div>
     </div>
-    <p class="text-muted">Ringkasan lengkap tersedia di halaman Dashboard.</p>
+    <div class="row">
+        <div class="col" style="flex:1;">
+            <div class="card">
+                <h6>Tickets per Status</h6>
+                <canvas id="chartStatusDonut" height="220"></canvas>
+            </div>
+        </div>
+        <div class="col" style="flex:2;">
+            <div class="card">
+                <h6>Tickets Trend</h6>
+                <canvas id="chartTrend" height="220"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Tab: Tickets -->

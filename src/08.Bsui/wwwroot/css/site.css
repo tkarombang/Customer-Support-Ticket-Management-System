@@ -447,12 +447,6 @@ label {
         font-weight: 600;
     }
 
-.toolbar-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
 .toolbar {
     display: flex;
     gap: 10px;
@@ -461,3 +455,61 @@ label {
     flex-wrap: wrap;
     padding-bottom: 4px;
 }
+
+.toolbar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+}
+
+.toolbar-actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: nowrap;
+    white-space: nowrap; /* Cegah text tombol wrap */
+}
+
+    .toolbar-actions .form-control {
+        width: 150px;
+        min-width: 150px;
+    }
+
+    .toolbar-actions .btn {
+        white-space: nowrap;
+    }
+
+
+
+/*GRID AREA REPORT HISTORIES PAGE START*/
+.report-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+    .report-grid .card {
+        grid-column: span 1;
+    }
+
+        .report-grid .card.span-2 {
+            grid-column: span 2;
+        }
+
+        .report-grid .card.span-4 {
+            grid-column: span 4;
+        }
+
+@media (max-width: 900px) {
+    .report-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+        .report-grid .card.span-2, .report-grid .card.span-4 {
+            grid-column: span 2;
+        }
+}
+/*GRID AREA REPORT HISTORIES PAGE END*/
