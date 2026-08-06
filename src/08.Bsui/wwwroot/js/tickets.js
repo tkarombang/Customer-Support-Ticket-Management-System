@@ -137,7 +137,7 @@ function renderTickets(tickets) {
                 <td><a href="/Tickets/Update?id=${t.ticketId}">${t.ticketNumber}</a></td>
                 <td>${t.title}</td>
                 <td>${t.customerName}</td>
-                <td><span class="badge ${statusBadgeClass(t.status)}">${t.status}</span></td>
+                <td><span class="badge ${statusBadgeClass(t.status)}">${formatActionLabel(t.status)}</span></td>
                 <td><span class="badge ${priorityBadgeClass(t.priority)}">${t.priority}</span></td>
                 <td>${t.assignedToAgentName ?? '-'}</td>
                 <td>${createdDate}</td>
@@ -145,4 +145,8 @@ function renderTickets(tickets) {
             </tr>
         `);
     });
+}
+
+function formatActionLabel(action) {
+    return action.replace(/([a-z])([A-Z])/g, '$1 $2')
 }

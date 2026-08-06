@@ -85,8 +85,9 @@ function renderSummary(items) {
 
 function describeChange(item) {
     if (item.action === 'StatusChanged' && item.previousStatus && item.newStatus) {
-        return `Status changed from <b>${item.previousStatus}</b> to <b>${item.newStatus}</b>`
+        return `Status changed from <b>${formatActionLabel(item.previousStatus)}</b> ▶️▶️ <b>${formatActionLabel(item.newStatus)}</b>`
     }
+    return formatActionLabel(item.action)
 }
 
 function renderTable(items) {
@@ -102,7 +103,7 @@ function renderTable(items) {
         tbody.append(`
             <tr>
                 <td>${h.ticketNumber}</td>
-                <td><span class="badge bg-primary">${h.action}</span></td>
+                <td><span class="badge bg-primary">${formatActionLabel(h.action)}</span></td>
                 <td>${describeChange(h)}</td>
                 <td>${h.changedByName}</td>
                 <td>${new Date(h.timestamp).toLocaleString('id-ID')}</td>
@@ -129,3 +130,7 @@ function renderPagination(page, totalPages, totalCount) {
     }
 }
 
+
+function formatActionLabel(action) {
+    return action.replace(/([a-z])([A-Z])/g, '$1 $2')
+}
