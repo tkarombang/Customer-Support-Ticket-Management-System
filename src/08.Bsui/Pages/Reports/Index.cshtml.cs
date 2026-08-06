@@ -37,4 +37,13 @@ public class IndexModel(ITicketApiClient apiClient) : PageModel
         return new JsonResult(result);
     }
 
+    //AJAX: GET /Reports?handler=Export
+    public async Task<IActionResult> OnGetExportAsync([FromQuery] ManagerReportFilterDto filter)
+    {
+        var token = HttpContext.Session.GetString("Token");
+        var fileBytes = await apiClient.ExportReportAsync(filter, token!);
+        return File(fileBytes!, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            $"TicketReport_{DateTime.UtcNow:yyyyMMdd}.xlsx");
+    }
+
 }
