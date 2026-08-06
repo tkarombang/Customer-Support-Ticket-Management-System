@@ -83,12 +83,28 @@ body {
     justify-content: center;
 }
 
-.toolbar, .filter-bar {
+.filter-bar{
     display: flex;
     gap: 10px;
-    align-items: center;
-    justify-content: space-between;
+    align-items: flex-end;
     flex-wrap: wrap;
+    padding-bottom: 4px;
+}
+
+.filter-bar > *{
+    flex-shrink: 0;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.filter-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 500;
 }
 
 .brand-icon {
@@ -383,6 +399,10 @@ label {
     margin-bottom: 16px;
 }
 
+.mt-3 {
+    margin-top: 16px;
+}
+
 .row {
     display: flex;
     gap: 16px;
@@ -396,4 +416,11 @@ label {
 
 .mandatory{
     color: red;
+}
+
+
+.pagination-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
