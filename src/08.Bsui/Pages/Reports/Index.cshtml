@@ -1,0 +1,77 @@
+﻿@page
+@model TicketManagement.Bsui.Pages.Reports.IndexModel
+@{
+    ViewData["Title"] = "Reports";
+    ViewData["Active"] = "Reports";
+}
+<div class="toolbar-header mb-3">
+    <div>
+        <h2>Reports</h2>
+        <p class="text-muted">Laporan dan analisis data tiket</p>
+    </div>
+    <button id="btnExport" type="button" class="btn btn-primary">⬇ Export</button>
+</div>
+
+<div class="tabs mb-3">
+    <button class="tab-btn active" data-tab="overview">Overview</button>
+    <button class="tab-btn" data-tab="tickets">Tickets</button>
+    <button class="tab-btn" data-tab="performance">Performance</button>
+    <button class="tab-btn" data-tab="sla">SLA</button>
+</div>
+
+<!-- Tab: Overview -->
+<div id="tab-overview" class="tab-panel">
+    <div class="row mb-3">
+        <div class="col"><div class="card"><h6>Total Tickets</h6><h3 id="ov-total">-</h3></div></div>
+        <div class="col"><div class="card"><h6>Tickets Selesai</h6><h3 id="ov-resolved">-</h3></div></div>
+        <div class="col"><div class="card"><h6>Dalam Proses</h6><h3 id="ov-inprogress">-</h3></div></div>
+        <div class="col"><div class="card"><h6>Closed / Cancelled</h6><h3 id="ov-closed">-</h3></div></div>
+    </div>
+    <p class="text-muted">Ringkasan lengkap tersedia di halaman Dashboard.</p>
+</div>
+
+<!-- Tab: Tickets -->
+<div id="tab-tickets" class="tab-panel" style="display:none;">
+    <table class="table">
+        <thead><tr><th>Ticket Number</th><th>Title</th><th>Status</th><th>Assignee</th><th>Created</th></tr></thead>
+        <tbody id="reportTicketsBody"></tbody>
+    </table>
+</div>
+
+<!-- Tab: Performance -->
+<div id="tab-performance" class="tab-panel" style="display:none;">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <h6>Average Response Time</h6>
+                <h3 id="perf-avgHours">-</h3>
+                <span class="text-muted" style="font-size:12px;">Rata-rata waktu respons (jam)</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tab: SLA -->
+<div id="tab-sla" class="tab-panel" style="display:none;">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <h6>SLA Compliance</h6>
+                <h3 id="sla-percentage">-</h3>
+                <span class="text-muted" style="font-size:12px;">
+                    <span id="sla-within">-</span> dari <span id="sla-total">-</span> tiket memenuhi SLA
+                </span>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <h6>Breached SLA</h6>
+                <h3 id="sla-breached">-</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/reports.js"></script>
+}

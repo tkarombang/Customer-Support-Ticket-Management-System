@@ -424,3 +424,31 @@ label {
     justify-content: space-between;
     align-items: center;
 }
+
+.tabs {
+    display: flex;
+    gap: 4px;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-muted);
+    border-bottom: 2px solid transparent;
+}
+
+    .tab-btn.active {
+        color: var(--primary);
+        border-bottom-color: var(--primary);
+        font-weight: 600;
+    }
+
+.toolbar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
