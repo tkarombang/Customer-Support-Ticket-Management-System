@@ -154,6 +154,19 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
             ?? new PagedResult<TicketHistoryItemDto>();
     }
 
+
+    public async Task<SlaComplianceDto?> GetSlaComplianceAsync(DateTime? startDate, DateTime? endDate, string token)
+    {
+        AttachToken(token);
+
+        var query = HttpUtility.ParseQueryString(string.Empty);
+        if (startDate.HasValue) query["startDate"] = startDate.Value.ToString("O");
+        if (endDate.HasValue) query["endDate"] = endDate.Value.ToString("O");
+
+        return await httpClient.GetFromJsonAsync<SlaComplianceDto>(
+            $"{ApiRoutes.Reports.Base}/{ApiRoutes.Reports.SlaCompliance}?{query}", JsonOptions);
+    }
+
     private void AttachToken(string token) =>
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 }

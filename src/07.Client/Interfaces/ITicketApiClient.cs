@@ -23,4 +23,5 @@ public interface ITicketApiClient
     Task<TicketAttachmentResponseDto?> UploadAttachmentAsync(Guid ticketId, Stream fileStream, string fileName, string contentType, string token);
     Task<TicketResponseDto?> GetTicketByIdAsync(Guid id, string token);
     Task<PagedResult<TicketHistoryItemDto>> GetTicketHistoriesAsync(TicketHistoryFilterDto filter, string token);
+    Task<SlaComplianceDto?> GetSlaComplianceAsync(DateTime? endDate, DateTime? startDate, string token);
 }
