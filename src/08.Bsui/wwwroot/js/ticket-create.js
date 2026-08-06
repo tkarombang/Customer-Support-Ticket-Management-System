@@ -41,7 +41,7 @@ function getAntiForgeryToken() {
 }
 
 function validateForm() {
-    const required = ['title', 'description', 'customerName', 'customerEmail'];
+    const required = ['Judul', 'Deskripsi', 'Namar Customer', 'Email Customer'];
     for (const id of required) {
         if (!$(`#${id}`).val()?.trim()) {
             Swal.fire({
