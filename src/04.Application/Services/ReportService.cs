@@ -171,6 +171,40 @@ public class ReportService(
     }
 
 
+    public async Task<byte[]> ExportToExcelAsync(ManagerReportFilterDto filter)
+    {
+        filter.PageSize = int.MaxValue; // export semua hasil filter, bukan 1 halaman saja
+        var data = await GetManagerReportAsync(filter);
+
+        using var workbook = new ClosedXML.Excel.XLWorkbook();
+        var sheet = workbook.Worksheets.Add("Tickets Report");
+
+        // Header
+        string[] headers = ["Ticket Number", "Customer", "Title", "Status", "Priority", "Assignee", "Created Date"];
+        for (int i = 0; i < headers.Length; i++)
+            sheet.Cell(1, i + 1).Value = headers[i];
+
+        // Rows
+        int row = 2;
+        foreach (var item in data.Items)
+        {
+            sheet.Cell(row, 1).Value = item.TicketNumber;
+            sheet.Cell(row, 2).Value = item.CustomerName;
+            sheet.Cell(row, 3).Value = item.Title;
+            sheet.Cell(row, 4).Value = item.Status;
+            sheet.Cell(row, 5).Value = item.AssignedToAgentName ?? "-";
+            sheet.Cell(row, 6).Value = item.CreatedDate.ToString("yyyy-MM-dd");
+            row++;
+        }
+
+        sheet.Columns().AdjustToContents();
+
+        using var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        return stream.ToArray();
+    }
+
+
 
     private async Task<SlaSettingDto> GetSlaSettingAsync()
     {

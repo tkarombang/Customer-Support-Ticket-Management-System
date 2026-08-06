@@ -9,4 +9,5 @@ public interface IReportService
     Task<PagedResult<ManagerReportItemDto>> GetManagerReportAsync(ManagerReportFilterDto filter);
     Task<SlaComplianceDto> GetSlaCompliannceAsync(DateTime? startDate, DateTime? endDate);
     Task<ResponseTimeDto> GetResponseTimeAsync(DateTime? startDate, DateTime? endDate);
+    Task<byte[]> ExportToExcelAsync(ManagerReportFilterDto filter);
 }
