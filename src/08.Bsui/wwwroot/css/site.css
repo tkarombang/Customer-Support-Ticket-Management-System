@@ -452,3 +452,12 @@ label {
     justify-content: space-between;
     align-items: flex-start;
 }
+
+.toolbar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding-bottom: 4px;
+}
