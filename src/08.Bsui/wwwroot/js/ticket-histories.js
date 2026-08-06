@@ -2,6 +2,19 @@
 
 $(document).ready(function () {
     loadHistories(1)
+    loadUserOption()
+
+    $('#btnFilter').on('click', function () { loadHistories(1); });
+
+    $('#btnReset').on('click', function () {
+        $('#searchTerm, #startDate, #endDate').val('');
+        $('#filterAction, #filterUser').val('');
+        loadHistories(1);
+    });
+
+    $(document).on('click', '.page-btn', function () {
+        loadHistories($(this).data('page'));
+    });
 })
 
 function loadHistories(page = 1) {
@@ -33,8 +46,10 @@ function loadHistories(page = 1) {
         data: params,
         success: function (result) {
             Swal.close();
-            renderTable(result.items)
-            renderSummary(result.items)
+
+            renderTable(result.items);
+            renderSummary(result.items);
+            renderPagination(result.pageNumber, result.totalPages, result.totalCount);
         },
         error: function (xhr) {
             if (xhr.status === 401) {
@@ -50,6 +65,17 @@ function loadHistories(page = 1) {
     })
 }
 
+function loadUserOption() {
+    $.ajax({
+        url: '/TicketHistories?handler=Users',
+        method: 'GET',
+        success: function (users) {
+            const select = $('#filterUser');
+            users.forEach(u => select.append(`<option value="${u.userId}">${u.name}</option>`));
+        }
+    });
+}
+
 function renderSummary(items) {
     $('#totalHistories').text(items.length)
     $('#statusChangedCount').text(items.filter(i => i.action === "StatusChanged").length)
@@ -58,7 +84,7 @@ function renderSummary(items) {
 }
 
 function describeChange(item) {
-    if (item.action === 'StatusChanged' && item.previous && item.newStatus) {
+    if (item.action === 'StatusChanged' && item.previousStatus && item.newStatus) {
         return `Status changed from <b>${item.previousStatus}</b> to <b>${item.newStatus}</b>`
     }
 }
@@ -83,5 +109,23 @@ function renderTable(items) {
             </tr>
         `)
     })
+}
+
+function renderPagination(page, totalPages, totalCount) {
+    $('#paginationInfo').text(
+        `Menampilkan halaman ${page} dari ${totalPages} (${totalCount} total riwayat)`
+    )
+
+    const container = $('#paginationButtons')
+    container.empty();
+
+    for (let i = 1; i <= totalPages; i++) {
+        const activeClass = i === page ? 'btn-primary' : 'btn-outline-secondary';
+        container.append(`<button class="btn ${activeClass} btn-sm page-btn" 
+            data-page="${i}">
+            ${i}
+            </button>
+        `)
+    }
 }
 
