@@ -14,7 +14,7 @@ public class TicketSequenceRepository(ApplicationDbContext context) : ITicketSeq
         await using var transaction = await context.Database.BeginTransactionAsync();
 
         var sequence = await context.TicketSequences
-            .FromSqlInterpolated($"SELECT * FROM TicketSequences WITH (UPDLOCK, ROWLOCK) WHERE Id = {year}")
+            .FromSqlInterpolated($"SELECT * FROM TicketSequences WITH (UPDLOCK, ROWLOCK) WHERE Year = {year}")
             .FirstOrDefaultAsync();
 
         if (sequence is null)
