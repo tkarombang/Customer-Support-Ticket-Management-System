@@ -4,12 +4,16 @@ using TicketManagement.Domain.Interfaces;
 using TicketManagement.Shared.Dtos.Reports;
 using TicketManagement.Shared.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using TicketManagement.Shared.Dtos.Settings;
+using TicketManagement.Domain.Entities;
 
 namespace TicketManagement.Application.Services;
 
 public class ReportService(
     IReportRepository reportRepository,
-    ITicketRepository ticketRepository)
+    ITicketRepository ticketRepository,
+    IAppSettingRepository appSettingRepository)
     : IReportService
 {
 
@@ -99,6 +103,59 @@ public class ReportService(
             PageSize = filter.PageSize,
             Items = items
         };
+    }
+
+
+
+    public async Task<SlaComplianceDto> GetSlaCompliannceAsync(DateTime? startDate, DateTime? endDate)
+    {
+        var slaSetting = await GetSlaSettingAsync();
+
+        var query = reportRepository.GetFilterableQuery()
+            .Where(t => t.Status == TicketStatus.Resolved || t.Status == TicketStatus.Closed);
+
+        if (startDate.HasValue) query = query.Where(t => t.CreatedDate >= startDate.Value);
+        if (endDate.HasValue) query = query.Where(t => t.CreatedDate <= endDate.Value);
+
+        var resolvedTickets = await query.ToListAsync();
+        var totalResolved = resolvedTickets.Count;
+
+        var withinSla = resolvedTickets.Count(t =>
+        {
+            var targetHours = t.Priority switch
+            {
+                TicketPriority.High => slaSetting.HighPriorityHours,
+                TicketPriority.Medium => slaSetting.MediumPriorityHours,
+                _ => slaSetting.LowPriorityHours
+            };
+
+            var actualHours = t.UpdatedDate.HasValue
+                ? (t.UpdatedDate.Value - t.CreatedDate).TotalHours
+                : double.MaxValue;
+
+            return actualHours <= targetHours;
+        });
+
+        var compliancePercentage = totalResolved == 0 ? 0 : Math.Round((double)withinSla / totalResolved * 100, 1);
+
+        return new SlaComplianceDto
+        {
+            CompliancePercentage = compliancePercentage,
+            TotalResolved = totalResolved,
+            WithinSla = withinSla,
+            BreachedSla = totalResolved + withinSla,
+            Trend = []
+        };
+    }
+
+
+
+    private async Task<SlaSettingDto> GetSlaSettingAsync()
+    {
+        var setting = await appSettingRepository.GetByKeyAsync("Sla.Config");
+        return setting?.SettingValue is null
+            ? new SlaSettingDto()
+            : System.Text.Json.JsonSerializer.Deserialize<SlaSettingDto>(setting.SettingValue)!;
     }
 
     
