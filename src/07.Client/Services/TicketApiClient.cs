@@ -167,6 +167,17 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
             $"{ApiRoutes.Reports.Base}/{ApiRoutes.Reports.SlaCompliance}?{query}", JsonOptions);
     }
 
+    public async Task<ResponseTimeDto?> GetResponseTimeAsync(DateTime? startDate, DateTime? endDate, string token)
+    {
+        AttachToken(token);
+        var query = HttpUtility.ParseQueryString(string.Empty);
+        if (startDate.HasValue) query["startDate"] = startDate.Value.ToString("O");
+        if (endDate.HasValue) query["endDate"] = endDate.Value.ToString("O");
+
+        return await httpClient.GetFromJsonAsync<ResponseTimeDto>(
+            $"{ApiRoutes.Reports.Base}/{ApiRoutes.Reports.ResponseTime}?{query}", JsonOptions);
+    }
+
     private void AttachToken(string token) =>
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 }

@@ -24,4 +24,5 @@ public interface ITicketApiClient
     Task<TicketResponseDto?> GetTicketByIdAsync(Guid id, string token);
     Task<PagedResult<TicketHistoryItemDto>> GetTicketHistoriesAsync(TicketHistoryFilterDto filter, string token);
     Task<SlaComplianceDto?> GetSlaComplianceAsync(DateTime? endDate, DateTime? startDate, string token);
+    Task<ResponseTimeDto?> GetResponseTimeAsync(DateTime? startDate, DateTime? endDate, string token);
 }
