@@ -178,6 +178,16 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
             $"{ApiRoutes.Reports.Base}/{ApiRoutes.Reports.ResponseTime}?{query}", JsonOptions);
     }
 
+
+    public async Task<byte[]?> ExportReportAsync(ManagerReportFilterDto filter, string token)
+    {
+        AttachToken(token);
+        var response = await httpClient.GetAsync($"{ApiRoutes.Reports.Base}/{ApiRoutes.Reports.Export}");
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadAsByteArrayAsync();
+    }
+
+
     private void AttachToken(string token) =>
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 }
