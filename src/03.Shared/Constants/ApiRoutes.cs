@@ -30,6 +30,7 @@ public static class ApiRoutes
     {
         public const string Base = $"{ApiRoutes.Base}/reports";
         public const string ManagerReport = "manager-report";
+        public const string SlaCompliance = "sla-compliance";
     }
 
     public static class Dashboard
