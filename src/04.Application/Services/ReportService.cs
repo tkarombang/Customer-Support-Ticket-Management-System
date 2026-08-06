@@ -118,9 +118,8 @@ public class ReportService(
         if (endDate.HasValue) query = query.Where(t => t.CreatedDate <= endDate.Value);
 
         var resolvedTickets = await query.ToListAsync();
-        var totalResolved = resolvedTickets.Count;
 
-        var withinSla = resolvedTickets.Count(t =>
+        bool IsWithinSla(Domain.Entities.Ticket t)
         {
             var targetHours = t.Priority switch
             {
@@ -134,9 +133,21 @@ public class ReportService(
                 : double.MaxValue;
 
             return actualHours <= targetHours;
-        });
+        }
 
+        var totalResolved = resolvedTickets.Count;
+        var withinSla = resolvedTickets.Count(IsWithinSla);
         var compliancePercentage = totalResolved == 0 ? 0 : Math.Round((double)withinSla / totalResolved * 100, 1);
+
+        var trend = resolvedTickets
+            .Where(t => t.UpdatedDate.HasValue)
+            .GroupBy(t => t.UpdatedDate!.Value.Date)
+            .OrderBy(g => g.Key)
+            .Select(g => new SlaComplianceTrendPointDto
+            {
+                Date = g.Key,
+                CompliancePercentage = Math.Round((double)g.Count(IsWithinSla) / g.Count() * 100, 1)
+            }).ToList();
 
         return new SlaComplianceDto
         {
@@ -144,7 +155,7 @@ public class ReportService(
             TotalResolved = totalResolved,
             WithinSla = withinSla,
             BreachedSla = totalResolved - withinSla,
-            Trend = []
+            Trend = trend
         };
     }
 

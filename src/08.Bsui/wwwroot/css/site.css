@@ -503,6 +503,16 @@ label {
             grid-column: span 4;
         }
 
+.chart-container {
+    position: relative;
+    height: 220px;
+    width: 100%;
+}
+
+    .chart-container.chart-md {
+        height: 320px;
+    }
+
 @media (max-width: 900px) {
     .report-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -513,3 +523,15 @@ label {
         }
 }
 /*GRID AREA REPORT HISTORIES PAGE END*/
+
+.table-mini {
+    width: 100%;
+    font-size: 13px;
+    border-collapse: collapse;
+}
+
+    .table-mini td, .table-mini th {
+        padding: 6px 8px;
+        border-bottom: 1px solid var(--card-border);
+        text-align: left;
+    }

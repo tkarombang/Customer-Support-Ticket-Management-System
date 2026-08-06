@@ -33,17 +33,68 @@
         <div class="col"><div class="card"><h6>Dalam Proses</h6><h3 id="ov-inprogress">-</h3></div></div>
         <div class="col"><div class="card"><h6>Closed / Cancelled</h6><h3 id="ov-closed">-</h3></div></div>
     </div>
-    <div class="row">
-        <div class="col" style="flex:1;">
-            <div class="card">
-                <h6>Tickets per Status</h6>
-                <canvas id="chartStatusDonut" height="220"></canvas>
+    <div class="report-grid">
+        <div class="card span-2">
+            <h6>Tickets per Status</h6>
+            <div class="chart-container chart-md">
+                <canvas id="chartStatusDonut"></canvas>
             </div>
         </div>
-        <div class="col" style="flex:2;">
-            <div class="card">
-                <h6>Tickets Trend</h6>
-                <canvas id="chartTrend" height="220"></canvas>
+        <div class="card span-2">
+            <h6>Tickets Trend</h6>
+            <div class="chart-container chart-md">
+                <canvas id="chartTrend"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="report-grid">
+        <div class="card span-2">
+            <h6>Tickets per Assigne (Top 6)</h6>
+            <div class="chart-container chart-md">
+                <canvas id="chartAssignee"></canvas>
+            </div>
+        </div>
+        <div class="card">
+            <h6>Tickets per Category</h6>
+            <div class="chart-container chart-md">
+                <canvas id="chartCategory"></canvas>
+            </div>
+        </div>
+        <div class="card">
+            <h6>Tickets per Priority</h6>
+            <div class="chart-container chart-md">
+                <canvas id="chartPriority"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="report-grid">
+        <div class="card">
+            <h6>Average Response Time</h6>
+            <h3 id="ov-avgHours">-</h3>
+            <span class="text-muted" style="font-size:12px;">Rata-rata waktu respons</span>
+        </div>
+        <div class="card">
+            <h6>SLA Compliance</h6>
+            <h3 id="ov-slaPercentage">-</h3>
+            <span class="text-muted" style="font-size:12px;"><span id="ov-slaWithin">-</span>/<span id="ov-slaTotal">-</span> tiket</span>
+        </div>
+        <div class="card span-2">
+            <h6>Tickets by Category</h6>
+            <table class="table-mini" id="categoryTable"></table>
+        </div>
+    </div>
+
+    <div class="report-grid">
+        <div class="card span-2">
+            <h6>Recent Closed Tickets</h6>
+            <table class="table-mini" id="recentClosedTable"></table>
+        </div>
+        <div class="card span-2">
+            <h6>SLA Compliance Trend</h6>
+            <div class="chart-container chart-md">
+                <canvas id="chartSlaTrend" height="180"></canvas>
             </div>
         </div>
     </div>
