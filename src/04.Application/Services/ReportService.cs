@@ -143,8 +143,30 @@ public class ReportService(
             CompliancePercentage = compliancePercentage,
             TotalResolved = totalResolved,
             WithinSla = withinSla,
-            BreachedSla = totalResolved + withinSla,
+            BreachedSla = totalResolved - withinSla,
             Trend = []
+        };
+    }
+
+
+    public async Task<ResponseTimeDto> GetResponseTimeAsync(DateTime? startDate, DateTime? endDate)
+    {
+        var query = reportRepository.GetFilterableQuery()
+            .Where(t => t.UpdatedDate.HasValue);
+
+        if (startDate.HasValue) query = query.Where(t => t.CreatedDate >= startDate.Value);
+        if (endDate.HasValue) query = query.Where(t => t.CreatedDate <= endDate.Value);
+
+        var tickets = await query.ToListAsync();
+
+        var avgHours = tickets.Count == 0
+            ? 0
+            : tickets.Average(t => (t.UpdatedDate!.Value - t.CreatedDate).TotalHours);
+
+        return new ResponseTimeDto
+        {
+            AverageResponseHours = Math.Round(avgHours, 1),
+            AverageResponseHoursPreviousPeriod = 0 // opsional: bandingkan periode sebelumnya, di-skip untuk kesederhanaan
         };
     }
 
