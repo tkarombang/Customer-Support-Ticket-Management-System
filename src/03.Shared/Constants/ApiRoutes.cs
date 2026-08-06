@@ -32,6 +32,7 @@ public static class ApiRoutes
         public const string ManagerReport = "manager-report";
         public const string SlaCompliance = "sla-compliance";
         public const string ResponseTime = "response-time";
+        public const string Export = "export";
     }
 
     public static class Dashboard
