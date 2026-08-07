@@ -8,6 +8,8 @@ public class ManagerReportItemDto
     public required string CustomerEmail { get; set; }
     public required string Title { get; set; }
     public required string Status { get; set; }
+    public required string Category { get; set; }
+    public required string Priority { get; set; }
     public Guid? AssignedToUserId { get; set; }
     public string? AssignedToAgentName { get; set; }
     public DateTime CreatedDate { get; set; }

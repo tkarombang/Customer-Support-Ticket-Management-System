@@ -89,6 +89,8 @@ public class ReportService(
                 CustomerEmail = t.CustomerEmail,
                 Title = t.Title,
                 Status = t.Status.ToString(),
+                Category = t.Category.ToString(),
+                Priority = t.Priority.ToString(),
                 AssignedToUserId = t.AssignedTo,
                 AssignedToAgentName = t.AssignedAgent != null ? t.AssignedAgent.Name : null,
                 CreatedDate = t.CreatedDate,
