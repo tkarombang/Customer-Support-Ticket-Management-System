@@ -1,10 +1,25 @@
 ﻿let statusChart, trendChart, assigneeChart, categoryChart, priorityChart, slaTrendChart;
+const defaultOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+        legend: {
+            position: 'bottom'
+        }
+    }
+};
+
 
 $(document).ready(function () {
     switchTab('overview');
 
     $('.tab-btn').on('click', function () {
         switchTab($(this).data('tab'));
+    });
+
+    $('#btnReset').on('click', function () {
+        $('#reportStartDate, #reportEndDate').val('');
+        switchTab('overview');
     });
 
     $('#btnExport').on('click', function () {
@@ -89,7 +104,7 @@ function renderStatusChart(items) {
                 backgroundColor: ['#2563eb', '#f59e0b', '#16a34a', '#64748b', '#dc2626']
             }]
         },
-        options: { plugins: { legend: { position: 'bottom' } } }
+        options: defaultOptions
     });
 }
 
@@ -116,7 +131,7 @@ function renderTrendChart(items) {
                 tension: 0.3
             }]
         },
-        options: { plugins: { legend: { display: false } } }
+        options: defaultOptions
     });
 }
 
@@ -132,7 +147,7 @@ function renderAssigneeChart(items) {
     assigneeChart = new Chart($('#chartAssignee'), {
         type: 'bar',
         data: { labels: top6.map(x => x[0]), datasets: [{ label: 'Jumlah Tiket', data: top6.map(x => x[1]), backgroundColor: '#2563eb' }] },
-        options: { indexAxis: 'y', plugins: { legend: { display: false } } }
+        options: { maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } } }
     });
 }
 
@@ -144,7 +159,7 @@ function renderCategoryChart(items) {
     categoryChart = new Chart($('#chartCategory'), {
         type: 'doughnut',
         data: { labels: Object.keys(counts), datasets: [{ data: Object.values(counts), backgroundColor: ['#2563eb', '#f59e0b', '#16a34a', '#7c3aed'] }] },
-        options: { plugins: { legend: { position: 'bottom' } } }
+        options: defaultOptions
     });
 }
 
@@ -156,7 +171,7 @@ function renderPriorityChart(items) {
     priorityChart = new Chart($('#chartPriority'), {
         type: 'doughnut',
         data: { labels: Object.keys(counts), datasets: [{ data: Object.values(counts), backgroundColor: ['#16a34a', '#f59e0b', '#dc2626'] }] },
-        options: { plugins: { legend: { position: 'bottom' } } }
+        options: defaultOptions
     });
 }
 
@@ -232,7 +247,7 @@ function renderSlaTrendChart(trend) {
             labels: trend.map(t => new Date(t.date).toLocaleDateString('id-ID')),
             datasets: [{ label: 'SLA Compliance %', data: trend.map(t => t.compliancePercentage), borderColor: '#16a34a', tension: 0.3 }]
         },
-        options: { scales: { y: { min: 0, max: 100 } }, plugins: { legend: { display: false } } }
+        options: { maintainAspectRatio: false, scales: { y: { min: 0, max: 100 } }, plugins: { legend: { display: false } } }
     });
 }
 
