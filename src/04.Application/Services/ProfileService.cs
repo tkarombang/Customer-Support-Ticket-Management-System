@@ -25,6 +25,7 @@ public class ProfileService(
             Address = user.Address,
             AvatarUrl = user.AvatarUrl,
             Role = user.Role.ToString(),
+            Status = user.Status.ToString(),
             CreatedDate = user.CreatedDate
         };
     }
