@@ -20,6 +20,7 @@ function loadDashboard() {
             Swal.close();
             renderSummary(summary);
             renderStatusChart(summary)
+            renderAssigneeChart(summary)
         },
         error: function (xhr) {
             Swal.close();
@@ -66,5 +67,14 @@ function renderStatusChart(summary) {
                 backgroundColor: ['#2563eb', '#f59e0b', '#16a34a', '#64748b'] }]
         },
         options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+    });
+}
+
+function renderAssigneeChart(summary) {
+    const workload = summary.workloadPerAgent || []
+    new Chart($('#chartDashAssignee'), {
+        type: 'bar',
+        data: { labels: workload.map(w => w.agentName), datasets: [{ label: 'Jumlah Tiket', data: workload.map(w => w.assignedTicketCount), backgroundColor: '#2563eb' }] },
+        options: { responsive: true, maintainAspectRatio: false, indexAxis: 'y', plugins: { legend: { display: false } } }
     });
 }
