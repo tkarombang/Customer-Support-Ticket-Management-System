@@ -30,4 +30,5 @@ public interface ITicketApiClient
     Task<UserResponseDtoForProfile?> GetProfileAsync(string token);
     Task ChangePasswordAsync(ChangePasswordDto dto, string token);
     Task<List<ActivityLogDto>> GetActivityLogAsync(string token);
+    Task UpdateProfileAsync(UpdateProfileDto dto, string token);
 }

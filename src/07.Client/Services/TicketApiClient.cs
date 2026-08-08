@@ -211,6 +211,15 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
     }
 
 
+    public async Task UpdateProfileAsync(UpdateProfileDto dto, string token)
+    {
+        AttachToken(token);
+
+        var response = await httpClient.PutAsJsonAsync<UpdateProfileDto>(ApiRoutes.Profile.Base, dto);
+        response.EnsureSuccessStatusCode();
+    }
+
+
     private void AttachToken(string token) =>
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 }
