@@ -1,0 +1,46 @@
+﻿@page
+@model TicketManagement.Bsui.Pages.Profile.IndexModel
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["Active"] = "Profile";
+}
+
+<h2>Profile</h2>
+
+<div class="row" style="align-items:flex-start;">
+    <div class="col" style="flex:1;">
+        <div class="card mb-3 text-center">
+            <div class="profile-avatar" id="avatarInitial">-</div>
+            <h5 id="profileName" class="mt-2">-</h5>
+            <span class="badge bg-primary" id="profileRole">-</span>
+        </div>
+
+        <div class="card">
+            <h6>Informasi Akun</h6>
+            <div class="info-row"><span>Username</span><b id="infoUsername">-</b></div>
+            <div class="info-row"><span>Email</span><b id="infoEmail">-</b></div>
+            <div class="info-row"><span>Bergabung</span><b id="infoJoined">-</b></div>
+        </div>
+    </div>
+
+    <div class="col" style="flex:2;">
+        <div class="card mb-3">
+            <h6>Informasi Pribadi</h6>
+            <div class="row mb-3">
+                <div class="col"><label>Nama Lengkap</label><input id="editName" class="form-control" /></div>
+                <div class="col"><label>No. Telepon</label><input id="editPhone" class="form-control" /></div>
+            </div>
+            <div class="row mb-3">
+                <div class="col"><label>Jabatan</label><input id="editJobTitle" class="form-control" /></div>
+            </div>
+            <div class="mb-3"><label>Alamat</label><textarea id="editAddress" class="form-control" rows="2"></textarea></div>
+            <button id="btnSaveProfile" type="button" class="btn btn-primary">Simpan Perubahan</button>
+        </div>
+    </div>
+
+
+</div>
+
+@section Scripts {
+    <script src="~/js/profile.js"></script>
+}
