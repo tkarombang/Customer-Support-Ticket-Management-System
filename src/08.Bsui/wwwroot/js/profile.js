@@ -1,12 +1,13 @@
 ﻿$(document).ready(function () {
-    loadProfile()
+    loadProfile(true)
     loadActivityLog()
 
     $('#btnSaveProfile').on('click', function () {
         const dto = {
             name: $('#editName').val(),
             phoneNumber: $('#editPhone').val(),
-            jobTitle: $('#editAddress').val()
+            jobTitle: $('#editJobTitle').val(),
+            address: $('#editAddress').val()
         };
 
         $.ajax({
@@ -15,14 +16,28 @@
             contentType: 'application/json',
             headers: { 'RequestVerificationToken': getAntiForgeryToken() },
             data: JSON.stringify(dto),
-            success: function () {
+            success: function (response, textStatus, xhr) {
+                console.log('SUCCESS:', xhr.status);
                 Swal.fire({
+                    toast: true,
+                    position: 'top-end',
                     icon: 'success',
-                    title: 'Done',
-                    text: 'Profile Berhasil Diupdate'
+                    title: 'Berhasil Update Profile.',
+                    showConfirmButton: false,
+                    timer: 3000
                 });
                 loadProfile()
                 loadActivityLog();
+            },
+            error: function (xhr) {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    text: 'Gagal memperbarui profile. (' + xhr.status + ')',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
             }
         })
     })
@@ -73,22 +88,24 @@
 })
 
 
-function loadProfile() {
-    Swal.fire({
-        title: 'Memuat Data...',
-        html: 'Mohon tunggu sebentar.',
-        allowOutsideClick: false,
-        allowEscapeKey: false,
-        didOpen: () => {
-            Swal.showLoading();
-        }
-    });
+function loadProfile(showLoading = false) {
+    if (showLoading) {
+        Swal.fire({
+            title: 'Memuat Data...',
+            html: 'Mohon tunggu sebentar.',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+    }
 
     $.ajax({
         url: '/Profile?handler=Detail',
         method: 'GET',
         success: function (p) {
-            Swal.close();
+            if (showLoading) Swal.close()
             $('#avatarInitial').text(p.name.charAt(0).toUpperCase());
             $('#profileName').text(p.name);
             $('#profileRole').text(p.role);
@@ -102,7 +119,7 @@ function loadProfile() {
             $('#editAddress').val(p.address);
         },
         error: function (xhr) {
-            Swal.close();
+            if (showLoading) Swal.close()
             if (xhr.status === 401) {
                 window.location.href = '/Login';
             } else {

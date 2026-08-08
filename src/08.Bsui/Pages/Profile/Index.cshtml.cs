@@ -21,8 +21,24 @@ public class IndexModel(ITicketApiClient apiClient) : PageModel
         return new JsonResult(profile);
     }
 
+    // AJAX PUT: /Profile?handler=Update
+    public async Task<JsonResult> OnPutUpdateAsync([FromBody] UpdateProfileDto dto)
+    {
+        var token = HttpContext.Session.GetString("Token");
+        try
+        {
+            await apiClient.UpdateProfileAsync(dto, token!);
+            HttpContext.Session.SetString("Name", dto.Name); // sinkronkan nama di navbar
+            return new JsonResult(new {success = true});
+        }
+        catch(HttpRequestException ex)
+        {
+            return new JsonResult(new { error = ex.Message }) { StatusCode = 400 }; 
+        }
+    }
 
-    // AJAX PUT: /Profile?handler=ChangePassword'
+
+    // AJAX PUT: /Profile?handler=ChangePassword
     public async Task<JsonResult> OnPutChangePasswordAsync([FromBody] ChangePasswordDto dto)
     {
         var token = HttpContext.Session.GetString("Token");
@@ -37,6 +53,7 @@ public class IndexModel(ITicketApiClient apiClient) : PageModel
         }
     }
 
+    // AJAX GET: /Profile?handler=ActivityLog
     public async Task<JsonResult> OnGetActivityLogAsync()
     {
         var token = HttpContext.Session.GetString("Token");
