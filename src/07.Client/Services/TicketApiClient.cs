@@ -202,6 +202,15 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
         response.EnsureSuccessStatusCode();
     }
 
+    public async Task<List<ActivityLogDto>> GetActivityLogAsync(string token)
+    {
+        AttachToken(token);
+        var logs = await httpClient.GetFromJsonAsync<List<ActivityLogDto>>($"{ApiRoutes.Profile.Base}/{ApiRoutes.Profile.ActivityLog}");
+
+        return logs ?? [];
+    }
+
+
     private void AttachToken(string token) =>
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 }

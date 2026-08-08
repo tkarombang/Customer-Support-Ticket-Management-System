@@ -29,4 +29,5 @@ public interface ITicketApiClient
     Task<byte[]?> ExportReportAsync(ManagerReportFilterDto filter, string token);
     Task<UserResponseDtoForProfile?> GetProfileAsync(string token);
     Task ChangePasswordAsync(ChangePasswordDto dto, string token);
+    Task<List<ActivityLogDto>> GetActivityLogAsync(string token);
 }
