@@ -194,6 +194,13 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
         return await httpClient.GetFromJsonAsync<UserResponseDtoForProfile?>(ApiRoutes.Profile.Base);
     }
 
+    public async Task ChangePasswordAsync(ChangePasswordDto dto, string token)
+    {
+        AttachToken(token);
+        var response = await httpClient.PutAsJsonAsync($"{ApiRoutes.Profile.Base}/{ApiRoutes.Profile.Password}", dto);
+
+        response.EnsureSuccessStatusCode();
+    }
 
     private void AttachToken(string token) =>
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);

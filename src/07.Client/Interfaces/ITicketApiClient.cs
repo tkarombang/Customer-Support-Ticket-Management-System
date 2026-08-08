@@ -28,4 +28,5 @@ public interface ITicketApiClient
     Task<ResponseTimeDto?> GetResponseTimeAsync(DateTime? startDate, DateTime? endDate, string token);
     Task<byte[]?> ExportReportAsync(ManagerReportFilterDto filter, string token);
     Task<UserResponseDtoForProfile?> GetProfileAsync(string token);
+    Task ChangePasswordAsync(ChangePasswordDto dto, string token);
 }
