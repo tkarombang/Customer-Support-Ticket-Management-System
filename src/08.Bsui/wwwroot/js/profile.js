@@ -1,5 +1,6 @@
 ﻿$(document).ready(function () {
     loadProfile()
+    loadActivityLog()
 
     $('#btnSaveProfile').on('click', function () {
         const dto = {
@@ -15,12 +16,13 @@
             headers: { 'RequestVerificationToken': getAntiForgeryToken() },
             data: JSON.stringify(dto),
             success: function () {
-                loadProfile()
                 Swal.fire({
                     icon: 'success',
                     title: 'Done',
                     text: 'Profile Berhasil Diupdate'
                 });
+                loadProfile()
+                loadActivityLog();
             }
         })
     })
@@ -57,6 +59,7 @@
                     timer: 3000
                 });
                 $('#oldPassword, #newPassword').val('');
+                loadActivityLog();
             },
             error: function (xhr) {
                 Swal.fire({
@@ -69,9 +72,6 @@
     })
 })
 
-function getAntiForgeryToken() {
-    return $('input[name="__RequestVerificationToken"]').val();
-}
 
 function loadProfile() {
     Swal.fire({
@@ -116,3 +116,33 @@ function loadProfile() {
     });
 }
 
+function loadActivityLog() {
+    $.ajax({
+        url: '/Profile?handler=ActivityLog',
+        method: 'Get',
+        success: function (logs) {
+            if (!logs || logs.length === 0) {
+                $('#activityTable')
+                    .html('<tr><td>Belum ada aktivitas</td></tr>');
+                return;
+            }
+            const rows = logs.map(l =>
+                `<tr>
+                    <td>${l.description}</td>
+                    <td>${new Date(l.timestamp).toLocaleString('id-ID')}</td>
+                </tr>`
+            ).join('');
+            $('#activityTable')
+                .html(`
+                <tr>
+                    <th>Aktivitas</th>
+                    <th>Waktu</th>
+                </tr>${rows}`);
+        }
+    })
+}
+
+
+function getAntiForgeryToken() {
+    return $('input[name="__RequestVerificationToken"]').val();
+}

@@ -37,7 +37,12 @@ public class IndexModel(ITicketApiClient apiClient) : PageModel
         }
     }
 
-
+    public async Task<JsonResult> OnGetActivityLogAsync()
+    {
+        var token = HttpContext.Session.GetString("Token");
+        var logs = await apiClient.GetActivityLogAsync(token!);
+        return new JsonResult(logs);
+    }
 
 
 }
