@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TicketManagement.Client.Interfaces;
+using TicketManagement.Shared.Dtos.Profile;
 
 namespace TicketManagement.Bsui.Pages.Profile;
 public class IndexModel(ITicketApiClient apiClient) : PageModel
@@ -19,5 +20,25 @@ public class IndexModel(ITicketApiClient apiClient) : PageModel
         var profile = await apiClient.GetProfileAsync(token!);
         return new JsonResult(profile);
     }
+
+
+    // AJAX PUT: /Profile?handler=ChangePassword'
+    public async Task<JsonResult> OnPutChangePasswordAsync([FromBody] ChangePasswordDto dto)
+    {
+        var token = HttpContext.Session.GetString("Token");
+        try
+        {
+            await apiClient.ChangePasswordAsync(dto, token!);
+            return new JsonResult(new { success = true });
+        }
+        catch (Exception)
+        {
+            return new JsonResult(new { error = "Password Lama Tidak Sesuai atau Terjadi Kesalahan." }) { StatusCode = 400 };
+        }
+    }
+
+
+
+
 }
 

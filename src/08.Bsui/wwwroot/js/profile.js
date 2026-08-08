@@ -1,5 +1,72 @@
 ﻿$(document).ready(function () {
     loadProfile()
+
+    $('#btnSaveProfile').on('click', function () {
+        const dto = {
+            name: $('#editName').val(),
+            phoneNumber: $('#editPhone').val(),
+            jobTitle: $('#editAddress').val()
+        };
+
+        $.ajax({
+            url: '/Profile?handler=Update',
+            method: 'PUT',
+            contentType: 'application/json',
+            headers: { 'RequestVerificationToken': getAntiForgeryToken() },
+            data: JSON.stringify(dto),
+            success: function () {
+                loadProfile()
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Done',
+                    text: 'Profile Berhasil Diupdate'
+                });
+            }
+        })
+    })
+
+
+    $('#btnChangePassword').on('click', function () {
+        const dto = { oldPassword: $('#oldPassword').val(), newPassword: $('#newPassword').val() }
+
+        if (!dto.oldPassword || !dto.newPassword) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                text: 'Isi Password Lama dan Baru',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            return
+        }
+
+        $.ajax({
+            url: '/Profile?handler=ChangePassword',
+            method: 'PUT',
+            contentType: 'application/json',
+            headers: { 'RequestVerificationToken': getAntiForgeryToken() },
+            data: JSON.stringify(dto),
+            success: function () {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Password berhasil diubah.',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                $('#oldPassword, #newPassword').val('');
+            },
+            error: function (xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal',
+                    text: 'Gagal mengubah password. (' + xhr.status + ')'
+                });
+            }
+        });
+    })
 })
 
 function getAntiForgeryToken() {
@@ -48,3 +115,4 @@ function loadProfile() {
         }
     });
 }
+
