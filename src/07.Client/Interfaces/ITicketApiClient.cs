@@ -1,4 +1,5 @@
 ﻿using TicketManagement.Shared.Dtos.Auth;
+using TicketManagement.Shared.Dtos.Profile;
 using TicketManagement.Shared.Dtos.Reports;
 using TicketManagement.Shared.Dtos.TicketHistories;
 using TicketManagement.Shared.Dtos.Tickets;
@@ -26,4 +27,5 @@ public interface ITicketApiClient
     Task<SlaComplianceDto?> GetSlaComplianceAsync(DateTime? endDate, DateTime? startDate, string token);
     Task<ResponseTimeDto?> GetResponseTimeAsync(DateTime? startDate, DateTime? endDate, string token);
     Task<byte[]?> ExportReportAsync(ManagerReportFilterDto filter, string token);
+    Task<UserResponseDtoForProfile?> GetProfileAsync(string token);
 }

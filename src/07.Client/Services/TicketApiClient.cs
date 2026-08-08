@@ -2,10 +2,10 @@
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Web;
-using TicketManagement.Base.Exceptions;
 using TicketManagement.Client.Interfaces;
 using TicketManagement.Shared.Constants;
 using TicketManagement.Shared.Dtos.Auth;
+using TicketManagement.Shared.Dtos.Profile;
 using TicketManagement.Shared.Dtos.Reports;
 using TicketManagement.Shared.Dtos.TicketHistories;
 using TicketManagement.Shared.Dtos.Tickets;
@@ -185,6 +185,13 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
         var response = await httpClient.GetAsync($"{ApiRoutes.Reports.Base}/{ApiRoutes.Reports.Export}");
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadAsByteArrayAsync();
+    }
+
+    public async Task<UserResponseDtoForProfile?> GetProfileAsync(string token)
+    {
+        AttachToken(token);
+
+        return await httpClient.GetFromJsonAsync<UserResponseDtoForProfile?>(ApiRoutes.Profile.Base);
     }
 
 
