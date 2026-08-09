@@ -1,0 +1,38 @@
+﻿@page
+@model TicketManagement.Bsui.Pages.Settings.IndexModel
+@{
+    ViewData["Title"] = "Settings";
+    ViewData["Active"] = "Settings";
+}
+
+<h2>Settings</h2>
+<p class="text-muted">Kelola konfigurasi sistem</p>
+
+<div class="tabs mb-3">
+    <button class="tab-btn active" data-tab="general">General</button>
+    <button class="tab-btn" data-tab="sla">SLA</button>
+    <button class="tab-btn" data-tab="integrations">Integrations</button>
+    <button class="tab-btn" data-tab="backup">Backup & Restore</button>
+    <button class="tab-btn" data-tab="logs">System Logs</button>
+</div>
+
+<!-- General -->
+<div id="tab-general" class="tab-panel">
+    <div class="card" style="max-width:600px;">
+        <div class="mb-2"><label>Nama Aplikasi</label><input id="gen-appName" class="form-control" /></div>
+        <div class="mb-2"><label>Deskripsi</label><textarea id="gen-appDesc" class="form-control" rows="2"></textarea></div>
+        <div class="row mb-2">
+            <div class="col"><label>Zona Waktu</label><input id="gen-timezone" class="form-control" /></div>
+            <div class="col"><label>Bahasa</label><input id="gen-language" class="form-control" /></div>
+        </div>
+        <div class="row mb-2">
+            <div class="col"><label>Format Tanggal</label><input id="gen-dateFormat" class="form-control" /></div>
+            <div class="col"><label>Item per Halaman</label><input id="gen-itemsPerPage" type="number" class="form-control" /></div>
+        </div>
+        <button id="btnSaveGeneral" type="button" class="btn btn-primary">Simpan Perubahan</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/settings.js"></script>
+}
