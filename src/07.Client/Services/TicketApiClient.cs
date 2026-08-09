@@ -222,13 +222,22 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
 
 
 
-    // SETTINGS IMPLEMENTS
+    // SETTINGS IMPLEMENTS START
     public async Task<GeneralSettingDto?> GetGeneralSettingAsync(string token)
     {
         AttachToken(token);
         return await httpClient.GetFromJsonAsync<GeneralSettingDto>($"{ApiRoutes.Settings.Base}/{ApiRoutes.Settings.General}");
     }
 
+    public async Task UpdateGeneralSettingAsync(GeneralSettingDto dto, string token)
+    {
+        AttachToken(token);
+
+        var response = await httpClient.PutAsJsonAsync($"{ApiRoutes.Settings.Base}/{ApiRoutes.Settings.General}", dto);
+        response.EnsureSuccessStatusCode();
+    }
+
+    // SETTINGS IMPLEMENTS END
 
     private void AttachToken(string token) =>
         httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);

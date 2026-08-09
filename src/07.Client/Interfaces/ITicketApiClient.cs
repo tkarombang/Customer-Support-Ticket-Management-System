@@ -33,4 +33,5 @@ public interface ITicketApiClient
     Task<List<ActivityLogDto>> GetActivityLogAsync(string token);
     Task UpdateProfileAsync(UpdateProfileDto dto, string token);
     Task<GeneralSettingDto?> GetGeneralSettingAsync(string token);
+    Task UpdateGeneralSettingAsync(GeneralSettingDto dto, string token);
 }
