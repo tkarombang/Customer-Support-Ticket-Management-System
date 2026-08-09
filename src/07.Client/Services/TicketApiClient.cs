@@ -7,6 +7,7 @@ using TicketManagement.Shared.Constants;
 using TicketManagement.Shared.Dtos.Auth;
 using TicketManagement.Shared.Dtos.Profile;
 using TicketManagement.Shared.Dtos.Reports;
+using TicketManagement.Shared.Dtos.Settings;
 using TicketManagement.Shared.Dtos.TicketHistories;
 using TicketManagement.Shared.Dtos.Tickets;
 using TicketManagement.Shared.Dtos.Users;
@@ -217,6 +218,15 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
 
         var response = await httpClient.PutAsJsonAsync<UpdateProfileDto>(ApiRoutes.Profile.Base, dto);
         response.EnsureSuccessStatusCode();
+    }
+
+
+
+    // SETTINGS IMPLEMENTS
+    public async Task<GeneralSettingDto?> GetGeneralSettingAsync(string token)
+    {
+        AttachToken(token);
+        return await httpClient.GetFromJsonAsync<GeneralSettingDto>($"{ApiRoutes.Settings.Base}/{ApiRoutes.Settings.General}");
     }
 
 

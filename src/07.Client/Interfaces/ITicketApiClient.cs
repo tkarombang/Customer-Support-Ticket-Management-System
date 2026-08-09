@@ -1,6 +1,7 @@
 ﻿using TicketManagement.Shared.Dtos.Auth;
 using TicketManagement.Shared.Dtos.Profile;
 using TicketManagement.Shared.Dtos.Reports;
+using TicketManagement.Shared.Dtos.Settings;
 using TicketManagement.Shared.Dtos.TicketHistories;
 using TicketManagement.Shared.Dtos.Tickets;
 using TicketManagement.Shared.Dtos.Users;
@@ -31,4 +32,5 @@ public interface ITicketApiClient
     Task ChangePasswordAsync(ChangePasswordDto dto, string token);
     Task<List<ActivityLogDto>> GetActivityLogAsync(string token);
     Task UpdateProfileAsync(UpdateProfileDto dto, string token);
+    Task<GeneralSettingDto?> GetGeneralSettingAsync(string token);
 }
