@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TicketManagement.Client.Interfaces;
+using TicketManagement.Shared.Dtos.Settings;
 
 namespace TicketManagement.Bsui.Pages.Settings;
 public class IndexModel(ITicketApiClient apiClient) : PageModel
@@ -13,8 +14,17 @@ public class IndexModel(ITicketApiClient apiClient) : PageModel
         return Page();
     }
 
+    // AJAX GET: /Settings?handler=General
     public async Task<JsonResult> OnGetGeneralAsync()
     {
         return new(await apiClient.GetGeneralSettingAsync(Token));
+    }
+
+
+    // AJAX PUT: /Settings?handler=General
+    public async Task<JsonResult> OnPutGeneralAsync([FromBody] GeneralSettingDto dto)
+    {
+        await apiClient.UpdateGeneralSettingAsync(dto, Token);
+        return new JsonResult(new { success = true });
     }
 }
