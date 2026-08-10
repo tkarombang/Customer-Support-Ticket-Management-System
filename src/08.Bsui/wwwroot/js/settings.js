@@ -76,6 +76,7 @@ function switchTab(tabName) {
 function loadTabData(tabName) {
     if (tabName === 'general') loadGeneral()
     if (tabName === 'sla') loadSla()
+    if (tabName === 'integrations') loadIntegrations()
 }
 
 // GENERAL
@@ -103,6 +104,44 @@ function loadSla() {
             $('#sla-high').val(s.highPriorityHours)
             $('#sla-medium').val(s.mediumPriorityHours)
             $('#sla-low').val(s.lowPriorityHours)
+        }
+    })
+}
+
+
+// INTEGRATIONS
+function loadIntegrations() {
+    $.ajax({
+        url: '/Settings?handler=Integrations',
+        method: 'GET',
+        success: function (list) {
+            const tbody = $('#integrationTableBody')
+            tbody.empty()
+
+            if (!list || list.length === 0) {
+                tbody.append(`
+                <tr>
+                    <td colspan="4" class="text-center">Belum ada integrasi</td >
+                </tr>
+                `)
+                return
+            }
+
+            list.forEach(i => {
+                const statusBadge = i.isActive
+                    ? '<span class="badge bg-success">Active</span>'
+                    : '<span class="badge bg-secondary">Inactive</span>'
+
+                tbody.append(`
+                    <tr data-id="${i.integrationId}">
+                        <td>${i.name}</td>
+                        <td>${i.webhookUrl}</td>
+                        <td>${i.hasApiKey ? '●●●●●●●●' : '-'}</td>
+                        <td><span class="toggle-active" style="cursor:pointer;">${statusBadge}</span></td>
+                    </tr>
+                `)
+            })
+
         }
     })
 }
