@@ -11,6 +11,7 @@
 <div class="tabs mb-3">
     <button class="tab-btn active" data-tab="general">General</button>
     <button class="tab-btn" data-tab="sla">SLA</button>
+    <button class="tab-btn" data-tab="integrations">Integrations</button>
 </div>
 
 <!-- General -->
@@ -38,6 +39,25 @@
         <div class="mb-2"><label>Target Low Priority (jam)</label><input id="sla-low" type="number" class="form-control" /></div>
         <button id="btnSaveSla" type="button" class="btn btn-primary mt-3">Simpan Perubahan</button>
     </div>
+</div>
+
+
+
+<!-- Integrations -->
+<div id="tab-integrations" class="tab-panel" style="display:none;">
+    <button id="btnShowIntegrationForm" type="button" class="btn btn-primary mb-3">+ Tambah Integrasi</button>
+
+    <div id="integrationForm" class="card mb-3" style="display:none; max-width:500px;">
+        <div class="mb-2"><label>Nama</label><input id="int-name" class="form-control" /></div>
+        <div class="mb-2"><label>Webhook URL</label><input id="int-webhook" class="form-control" /></div>
+        <div class="mb-2"><label>API Key</label><input id="int-apikey" type="password" class="form-control" /></div>
+        <button id="btnSaveIntegration" type="button" class="btn btn-success">Simpan</button>
+    </div>
+
+    <table class="table">
+        <thead><tr><th>Nama</th><th>Webhook URL</th><th>API Key</th><th>Status</th></tr></thead>
+        <tbody id="integrationTableBody"></tbody>
+    </table>
 </div>
 
 @section Scripts {
