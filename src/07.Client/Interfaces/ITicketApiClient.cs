@@ -37,4 +37,5 @@ public interface ITicketApiClient
     Task<SlaSettingDto?> GetSlaSettingAsync(string token);
     Task UpdateSlaSettingAsync(SlaSettingDto dto, string token);
     Task<List<IntegrationResponseDto>> GetIntegrationsAsync(string token);
+    Task<IntegrationResponseDto?> CreateIntegrationAsync(CreateIntegrationDto dto, string token);
 }

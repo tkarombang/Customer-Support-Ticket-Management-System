@@ -259,6 +259,16 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
         var response = await httpClient.GetFromJsonAsync<List<IntegrationResponseDto>>($"{ApiRoutes.Settings.Base}/{ApiRoutes.Settings.Integrations}");
         return response ?? [];
     }
+
+    public async Task<IntegrationResponseDto?> CreateIntegrationAsync(CreateIntegrationDto dto, string token)
+    {
+        AttachToken(token);
+
+        var response = await httpClient.PostAsJsonAsync($"{ApiRoutes.Settings.Base}/{ApiRoutes.Settings.Integrations}", dto);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<IntegrationResponseDto>();
+
+    }
     // SETTINGS IMPLEMENTS END
 
     private void AttachToken(string token) =>
