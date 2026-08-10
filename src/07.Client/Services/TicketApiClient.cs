@@ -243,6 +243,14 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
 
         return await httpClient.GetFromJsonAsync<SlaSettingDto>($"{ApiRoutes.Settings.Base}/{ApiRoutes.Settings.Sla}");
     }
+
+    public async Task UpdateSlaSettingAsync(SlaSettingDto dto, string token)
+    {
+        AttachToken(token);
+
+        var response = await httpClient.PutAsJsonAsync($"{ApiRoutes.Settings.Base}/{ApiRoutes.Settings.Sla}", dto);
+        response.EnsureSuccessStatusCode();
+    }
     // SETTINGS IMPLEMENTS END
 
     private void AttachToken(string token) =>
