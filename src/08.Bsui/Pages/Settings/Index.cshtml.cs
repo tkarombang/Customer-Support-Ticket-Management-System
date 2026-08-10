@@ -48,4 +48,12 @@ public class IndexModel(ITicketApiClient apiClient) : PageModel
         return new JsonResult(result);
     }
 
+    // AJAX POST: /Settings?handler=Integration
+    public async Task<JsonResult> OnPostIntegrationAsync([FromBody] CreateIntegrationDto dto)
+    {
+        var result = await apiClient.CreateIntegrationAsync(dto, Token);
+        return new JsonResult(result);
+    }
+
+
 }
