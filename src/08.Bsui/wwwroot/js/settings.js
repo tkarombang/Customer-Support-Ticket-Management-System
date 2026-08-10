@@ -69,7 +69,13 @@ function loadGeneral() {
 
 // SLA
 function loadSla() {
-    $('#sla-high').val()
-    $('#sla-medium').val()
-    $('#sla-low').val()
+    $.ajax({
+        url: '/Settings?handler=Sla',
+        method: 'GET',
+        success: function (s) {
+            $('#sla-high').val(s.highPriorityHours)
+            $('#sla-medium').val(s.mediumPriorityHours)
+            $('#sla-low').val(s.lowPriorityHours)
+        }
+    })
 }
