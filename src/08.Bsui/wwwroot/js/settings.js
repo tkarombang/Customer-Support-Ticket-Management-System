@@ -21,7 +21,8 @@ $(document).ready(function () {
 
         $.ajax({
             url: '/Settings?handler=General',
-            method: 'PUT', contentType: 'application/json',
+            method: 'PUT',
+            contentType: 'application/json',
             headers: { 'RequestVerificationToken': getAntiForgeryToken() },
             data: JSON.stringify(dto),
             success: function () {
@@ -35,6 +36,32 @@ $(document).ready(function () {
                 });
             }
         });
+    })
+
+    $('#btnSaveSla').on('click', function () {
+        const dto = {
+            highPriorityHours: parseInt($('#sla-high').val()),
+            mediumPriorityHours: parseInt($('#sla-medium').val()),
+            lowPriorityHours: parseInt($('#sla-low').val())
+        }
+
+        $.ajax({
+            url: '/Settings?handler=Sla',
+            method: 'PUT',
+            contentType: 'application/json',
+            headers: { 'RequestVerificationToken': getAntiForgeryToken() },
+            data: JSON.stringify(dto),
+            success: function () {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Pengaturan SLA Berhasil disimpan.',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            }
+        })
     })
 })
 
