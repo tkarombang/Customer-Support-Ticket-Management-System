@@ -63,6 +63,37 @@ $(document).ready(function () {
             }
         })
     })
+
+
+    $('#btnShowIntegrationForm').on('click', function () {
+        $('#integrationForm').toggle()
+    })
+    $('#btnSaveIntegration').on('click', function () {
+        const dto = {
+            name: $('#int-name').val(),
+            webhookUrl: $('#int-webhook').val(),
+            apiKey: $('#int-apikey').val()
+        };
+        $.ajax({
+            url: '/Settings?handler=Integration',
+            method: 'POST',
+            contentType: 'application/json',
+            headers: { 'RequestVerificationToken': getAntiForgeryToken() },
+            data: JSON.stringify(dto),
+            success: function () {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Berhasil Menambahkan Integrasi Baru.',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+                $('#integrationForm').hide();
+                loadIntegrations();
+            }
+        });
+    });
 })
 
 function switchTab(tabName) {
