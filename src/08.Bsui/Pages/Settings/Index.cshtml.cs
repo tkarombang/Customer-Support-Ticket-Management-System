@@ -27,4 +27,13 @@ public class IndexModel(ITicketApiClient apiClient) : PageModel
         await apiClient.UpdateGeneralSettingAsync(dto, Token);
         return new JsonResult(new { success = true });
     }
+
+
+
+    // AJAX GET: /Settings?handler=Sla
+    public async Task<JsonResult> OnGetSlaAsync()
+    {
+        return new(await apiClient.GetSlaSettingAsync(Token));
+    }
+
 }
