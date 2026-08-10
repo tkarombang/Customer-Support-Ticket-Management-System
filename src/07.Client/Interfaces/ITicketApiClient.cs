@@ -36,4 +36,5 @@ public interface ITicketApiClient
     Task UpdateGeneralSettingAsync(GeneralSettingDto dto, string token);
     Task<SlaSettingDto?> GetSlaSettingAsync(string token);
     Task UpdateSlaSettingAsync(SlaSettingDto dto, string token);
+    Task<List<IntegrationResponseDto>> GetIntegrationsAsync(string token);
 }
