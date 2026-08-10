@@ -19,8 +19,6 @@ public class IndexModel(ITicketApiClient apiClient) : PageModel
     {
         return new(await apiClient.GetGeneralSettingAsync(Token));
     }
-
-
     // AJAX PUT: /Settings?handler=General
     public async Task<JsonResult> OnPutGeneralAsync([FromBody] GeneralSettingDto dto)
     {
@@ -35,13 +33,19 @@ public class IndexModel(ITicketApiClient apiClient) : PageModel
     {
         return new(await apiClient.GetSlaSettingAsync(Token));
     }
-
-
     // AJAX PUT: /Settings?handler=Sla
     public async Task<JsonResult> OnPutSlaAsync([FromBody] SlaSettingDto dto)
     {
         await apiClient.UpdateSlaSettingAsync(dto, Token);
         return new JsonResult(new { success = true });
+    }
+
+
+    // AJAX GET: /Settings?handler=Integrations
+    public async Task<JsonResult> OnGetIntegrationsAsync()
+    {
+        var result = await apiClient.GetIntegrationsAsync(Token);
+        return new JsonResult(result);
     }
 
 }
