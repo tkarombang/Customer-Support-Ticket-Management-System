@@ -4,6 +4,10 @@
 
 $(document).ready(function () {
     switchTab('general')
+    $('.tab-btn').on('click', function () {
+        switchTab($(this).data('tab'))
+    })
+
 
     $('#btnSaveGeneral').on('click', function () {
         const dto = {
@@ -35,13 +39,19 @@ $(document).ready(function () {
 })
 
 function switchTab(tabName) {
+    $('.tab-panel').hide()
+    $(`#tab-${tabName}`).show()
+    $('.tab-btn').removeClass('active')
+    $(`.tab-btn[data-tab="${tabName}"]`).addClass('active');
     loadTabData(tabName)
 }
 
 function loadTabData(tabName) {
     if (tabName === 'general') loadGeneral()
+    if (tabName === 'sla') loadSla()
 }
 
+// GENERAL
 function loadGeneral() {
     $.ajax({
         url: '/Settings?handler=General',
@@ -55,4 +65,11 @@ function loadGeneral() {
             $('#gen-itemsPerPage').val(g.itemsPerPage);
         }
     });
+}
+
+// SLA
+function loadSla() {
+    $('#sla-high').val()
+    $('#sla-medium').val()
+    $('#sla-low').val()
 }
