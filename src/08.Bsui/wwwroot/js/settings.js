@@ -108,6 +108,7 @@ function loadTabData(tabName) {
     if (tabName === 'general') loadGeneral()
     if (tabName === 'sla') loadSla()
     if (tabName === 'integrations') loadIntegrations()
+    if (tabName === 'backup') loadBackupHistory()
 }
 
 // GENERAL
@@ -173,6 +174,41 @@ function loadIntegrations() {
                 `)
             })
 
+        }
+    })
+}
+
+
+// BACKUP
+function loadBackupHistory() {
+    $.ajax({
+        url: '/Settings?handler=BackupHistory',
+        method: 'GET',
+        success: function (list) {
+            const tbody = $("#backupTableBody")
+            tbody.empty()
+            if (!list || list.length === 0) {
+                tbody.append(`
+                    <tr>
+                        <td colspan="5" class="text-center">Belum ada riwayat backup</td>
+                    </tr>
+                    return`)
+            }
+
+            list.forEach(b => {
+                const sizeKb = b.fileSizeBytes ? (b.fileSizeBytes / 1024).toFixed(0) + ' KB' : '-'
+                const statusBadge = b.status === 'Success'
+                    ? '<span class="badge bg-success">Success</span>'
+                    : '<span class="badge bg-danger">Failed</span>'
+                tbody.append(`
+                    <tr>
+                        <td>${b.fileName}</td>
+                        <td>${sizeKb}</td>
+                        <td>${b.type}</td>
+                        <td>${statusBadge}</td>
+                        <td>${new Date(b.createdDate).toLocaleString('id-ID')}</td>
+                    </tr>`)
+            })
         }
     })
 }
