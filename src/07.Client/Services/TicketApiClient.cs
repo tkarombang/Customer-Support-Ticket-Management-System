@@ -281,6 +281,19 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
 
 
 
+    public async Task<BackupHistoryResponseDto?> TriggerBackupAsync(string token)
+    {
+        AttachToken(token);
+
+        var url = $"{ApiRoutes.Settings.Base}/{ApiRoutes.Settings.Backup}";
+        var response = await httpClient.PostAsync(url, content: null);
+        response.EnsureSuccessStatusCode();
+
+        return await response.Content.ReadFromJsonAsync<BackupHistoryResponseDto>();
+    }
+
+
+
 
 
     // SETTINGS IMPLEMENTS END

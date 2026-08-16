@@ -39,4 +39,5 @@ public interface ITicketApiClient
     Task<List<IntegrationResponseDto>> GetIntegrationsAsync(string token);
     Task<IntegrationResponseDto?> CreateIntegrationAsync(CreateIntegrationDto dto, string token);
     Task<List<BackupHistoryResponseDto>> GetBackupHistoryAsync(string token);
+    Task<BackupHistoryResponseDto?> TriggerBackupAsync(string token);
 }
