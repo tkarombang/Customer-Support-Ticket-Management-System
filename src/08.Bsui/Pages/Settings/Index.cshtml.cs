@@ -56,4 +56,18 @@ public class IndexModel(ITicketApiClient apiClient) : PageModel
     }
 
 
+    // AJAX PUT (INTEGRATION):BELUM ADA UI DAN AJAX NYA
+
+
+
+    // AJAX GET: /Settings?handler=BackupHistory
+    public async Task<JsonResult> OnGetBackupHistoryAsync()
+    {
+        return new(await apiClient.GetBackupHistoryAsync(Token));
+    }
+
+    // AJAX POST:
+    
+
+
 }
