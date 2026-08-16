@@ -269,6 +269,20 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
         return await response.Content.ReadFromJsonAsync<IntegrationResponseDto>();
 
     }
+
+
+    public async Task<List<BackupHistoryResponseDto>> GetBackupHistoryAsync(string token)
+    {
+        AttachToken(token);
+
+        var response = await httpClient.GetFromJsonAsync<List<BackupHistoryResponseDto>>($"{ApiRoutes.Settings.Base}/{ApiRoutes.Settings.Backup}");
+        return response ?? [];
+    }
+
+
+
+
+
     // SETTINGS IMPLEMENTS END
 
     private void AttachToken(string token) =>
