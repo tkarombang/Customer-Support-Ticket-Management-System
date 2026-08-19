@@ -136,6 +136,78 @@ $(document).ready(function () {
         });
         
     })
+
+
+
+    $('#btnRestore').on('click', function () {
+        const file = $('#restoreFile')[0].files[0]
+        if (!file) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: 'Pilih file .bak terlebih dahulu.',
+                showConfirmButton: false,
+                timer: 3000
+            });
+            return
+        }
+
+        Swal.fire({
+            title: "PERINGATAN",
+            text: "Restore akan Menimpa data saat ini.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Lanjutkan?"
+        }).then((result) => {
+            const formData = new FormData();
+            formData.append('file', file)
+
+            $.ajax({
+                url: '/Settings?handler=Restore',
+                method: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                headers: { 'RequestVerificationToken': getAntiForgeryToken() },
+                success: function (response) {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Berhasil Restore.',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                },
+                error: function () {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Restore Gagal.',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                }
+            })
+
+        })
+    })
+
+
+
+
+
+    $('#btnFilterLogs').on('click', function () { loadLogs(1) })
+    $('#btnResetLogs').on('click', function () {
+        $('#log-search').val('')
+        $('#log-action').val('')
+        loadLogs(1)
+    })
+
 })
 
 function switchTab(tabName) {
@@ -151,6 +223,7 @@ function loadTabData(tabName) {
     if (tabName === 'sla') loadSla()
     if (tabName === 'integrations') loadIntegrations()
     if (tabName === 'backup') loadBackupHistory()
+    if (tabName === 'logs') loadLogs(1)
 }
 
 // GENERAL
@@ -251,6 +324,55 @@ function loadBackupHistory() {
                         <td>${new Date(b.createdDate).toLocaleString('id-ID')}</td>
                     </tr>`)
             })
+        }
+    })
+}
+
+
+
+// SYSTEM LOGS
+function loadLogs(page) {
+    Swal.fire({
+        title: 'Memuat Data...',
+        html: 'Mohon tunggu sebentar.',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+        didOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    const params = {
+        SearchTerm: $('#log-search').val(),
+        Action: $('#log-action').val(),
+        PageNumber: page, PageSize: 10
+    }
+    $.ajax({
+        url: '/Settings?handler=SystemLogs',
+        method: 'GET',
+        data: params,
+        success: function (result) {
+            Swal.close()
+            const tbody = $('#logTableBody')
+            tbody.empty()
+
+            if (!result.items || result.items.length === 0) {
+                tbody.append(`
+                <tr>
+                    <td colspan="5" class='text-center'>Tidak Ada Log</td>
+                </tr>`)
+            }
+
+            result.items.forEach(l => tbody.append(`
+            <tr>
+                <td>${l.userName ?? 'System'}</td>
+                <td><span class="badge bg-primary">${l.action}</span></td>
+                <td>${l.description}</td>
+                <td>${l.ipAddress ?? '-'}</td>
+                <td>${new Date(l.timestamp).toLocaleString('id-ID')}</td>
+            </tr>`))
+
+            $('#logPaginationInfo').text(`Halaman ${result.pageNumber} dari ${result.totalPages} (${result.totalCount} total log)`)
         }
     })
 }
