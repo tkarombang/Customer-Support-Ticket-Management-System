@@ -94,6 +94,48 @@ $(document).ready(function () {
             }
         });
     });
+
+    $('#btnTriggerBackup').on('click', function () {
+        Swal.fire({
+            title: "Apakah kamu yakin?",
+            text: "Buat backup database sekarang?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Backuup Sekarang!"
+        }).then((result) => {
+            if (!result.isConfirmed) return;
+
+            $.ajax({
+                url: '/Settings?handler=Backup',
+                method: 'POST',
+                headers: { 'RequestVerificationToken': getAntiForgeryToken() },
+                success: function (response) {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Berhasil Backup.',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                    loadBackupHistory()
+                },
+                error: function () {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'error',
+                        title: 'Backup Gagal.',
+                        showConfirmButton: false,
+                        timer: 3000
+                    });
+                }
+            })
+        });
+        
+    })
 })
 
 function switchTab(tabName) {

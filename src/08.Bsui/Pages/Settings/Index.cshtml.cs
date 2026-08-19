@@ -66,8 +66,12 @@ public class IndexModel(ITicketApiClient apiClient) : PageModel
         return new(await apiClient.GetBackupHistoryAsync(Token));
     }
 
-    // AJAX POST:
-    
+    // AJAX POST: /Settings?handler=Backup
+    public async Task<JsonResult> OnPostBackupAsync()
+    {
+        var result = await apiClient.TriggerBackupAsync(Token);
+        return new JsonResult(result);
+    }
 
 
 }
