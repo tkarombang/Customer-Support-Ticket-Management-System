@@ -2,6 +2,7 @@
 using TicketManagement.Shared.Dtos.Profile;
 using TicketManagement.Shared.Dtos.Reports;
 using TicketManagement.Shared.Dtos.Settings;
+using TicketManagement.Shared.Dtos.SystemLogs;
 using TicketManagement.Shared.Dtos.TicketHistories;
 using TicketManagement.Shared.Dtos.Tickets;
 using TicketManagement.Shared.Dtos.Users;
@@ -40,4 +41,6 @@ public interface ITicketApiClient
     Task<IntegrationResponseDto?> CreateIntegrationAsync(CreateIntegrationDto dto, string token);
     Task<List<BackupHistoryResponseDto>> GetBackupHistoryAsync(string token);
     Task<BackupHistoryResponseDto?> TriggerBackupAsync(string token);
+    Task RestoreBackupAsync(Stream fileStream, string fileName, string Token);
+    Task<PagedResult<SystemLogItemDto>?> GetSystemLogsAsync(SystemLogFilterDto filter, string token);
 }

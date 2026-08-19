@@ -8,6 +8,7 @@ using TicketManagement.Shared.Dtos.Auth;
 using TicketManagement.Shared.Dtos.Profile;
 using TicketManagement.Shared.Dtos.Reports;
 using TicketManagement.Shared.Dtos.Settings;
+using TicketManagement.Shared.Dtos.SystemLogs;
 using TicketManagement.Shared.Dtos.TicketHistories;
 using TicketManagement.Shared.Dtos.Tickets;
 using TicketManagement.Shared.Dtos.Users;
@@ -290,6 +291,28 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
         response.EnsureSuccessStatusCode();
 
         return await response.Content.ReadFromJsonAsync<BackupHistoryResponseDto>();
+    }
+
+
+    public async Task RestoreBackupAsync(Stream fileStream, string fileName, string token)
+    {
+        AttachToken(token);
+
+        using var content = new MultipartFormDataContent();
+        using var fileContent = new StreamContent(fileStream);
+
+        content.Add(fileContent, "file", fileName);
+        var url = $"{ApiRoutes.Settings.Base}/{ApiRoutes.Settings.Restore}";
+        var response = await httpClient.PostAsync(url, content);
+    }
+
+    public async Task<PagedResult<SystemLogItemDto>?> GetSystemLogsAsync(SystemLogFilterDto filter, string token)
+    {
+        AttachToken(token);
+
+        var url = $"{ApiRoutes.Settings.Base}/{ApiRoutes.Settings.SystemLogs}";
+        return await httpClient.GetFromJsonAsync<PagedResult<SystemLogItemDto>?>(
+            url, JsonOptions);
     }
 
 
