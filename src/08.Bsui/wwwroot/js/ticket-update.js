@@ -37,7 +37,11 @@ function loadDetail() {
                 Swal.fire({
                     icon: 'error',
                     title: 'Ticket Clossed',
-                    text: 'Ini tidak dapat diubah'
+                    text: 'Tidak dapat Melakukan Perubahan',
+                    focusConfirm: true,
+                    confirmButtonText: 'Thanks'
+                }).then(result => {
+                    if (result.isConfirmed) window.location.href = '/Tickets';
                 });
             }
 
