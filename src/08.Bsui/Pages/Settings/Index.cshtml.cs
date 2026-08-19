@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TicketManagement.Client.Interfaces;
 using TicketManagement.Shared.Dtos.Settings;
+using TicketManagement.Shared.Dtos.SystemLogs;
 
 namespace TicketManagement.Bsui.Pages.Settings;
 public class IndexModel(ITicketApiClient apiClient) : PageModel
@@ -70,6 +71,22 @@ public class IndexModel(ITicketApiClient apiClient) : PageModel
     public async Task<JsonResult> OnPostBackupAsync()
     {
         var result = await apiClient.TriggerBackupAsync(Token);
+        return new JsonResult(result);
+    }
+
+    // AJAX POST: /Settings?handler=Restore
+    public async Task<JsonResult> OnPostRestoreAsync(IFormFile file)
+    {
+        await using var stream = file.OpenReadStream();
+        await apiClient.RestoreBackupAsync(stream, file.FileName, Token);
+        return new JsonResult(new { success = true, message = "Restore berhasil. Aplikasi mungkin perlu di-restart." });
+    }
+
+
+    // AJAX POST: /Settings?handler=SystemLogs
+    public async Task<JsonResult> OnGetSystemLogsAsync([FromQuery] SystemLogFilterDto filter)
+    {
+        var result = await apiClient.GetSystemLogsAsync(filter, Token);
         return new JsonResult(result);
     }
 
