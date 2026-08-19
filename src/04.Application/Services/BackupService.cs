@@ -51,8 +51,10 @@ namespace TicketManagement.Application.Services
 
         public async Task RestoreAsync(Stream backupFileStream, string originalFileName)
         {
+            var backupFolder = GetBackupFolder();
+
             // Simpan file upload ke folder sementara dulu sebelum di-restore
-            var tempPath = Path.Combine(Path.GetTempPath(), $"restore_{Guid.NewGuid()}.bak");
+            var tempPath = Path.Combine(backupFolder, $"restore_{Guid.NewGuid()}.bak");
 
             await using (var fileStream = File.Create(tempPath))
             {
@@ -85,5 +87,14 @@ namespace TicketManagement.Application.Services
             CreatedDate = h.CreatedDate,
             TriggeredByName = h.TriggeredByUser?.Name
         };
+
+
+        // HELPERS PATH Backup
+        private static string GetBackupFolder()
+        {
+            var folder = Path.Combine(AppContext.BaseDirectory, "App_Data", "backups");
+            Directory.CreateDirectory(folder);
+            return folder;
+        }
     }
 }
