@@ -21,6 +21,19 @@ public class ReportService(
     {
         var tickets = (await ticketRepository.GetAllAsync()).ToList();
 
+        var now = DateTime.UtcNow;
+        var last30Days = now.AddDays(-30);
+        var previous300Days = now.AddDays(-60);
+
+        var currentPeriod = tickets.Where(t => t.CreatedDate >= last30Days).ToList();
+        var previousPeriod = tickets.Where(t => t.CreatedDate >= previous300Days && t.CreatedDate < last30Days).ToList();
+
+        double CalcChangePercent(int current, int previous)
+        {
+            if (previous == 0) return current > 0 ? 100 : 0;
+            return Math.Round((double)(current - previous) / previous * 100, 1);
+        }
+
         var workload = tickets
             .Where(t => t.AssignedTo.HasValue && t.AssignedAgent != null)
             .GroupBy(t => new { t.AssignedTo, t.AssignedAgent!.Name })
@@ -39,7 +52,21 @@ public class ReportService(
             InProgressCount = tickets.Count(t => t.Status == TicketStatus.InProgress),
             ResolvedCount = tickets.Count(t => t.Status == TicketStatus.Resolved),
             ClosedCount = tickets.Count(t => t.Status == TicketStatus.Closed),
-            WorkloadPerAgent = workload
+            WorkloadPerAgent = workload,
+
+            TotalChangePercent = CalcChangePercent(currentPeriod.Count, previousPeriod.Count),
+            ResolvedChangePercent = CalcChangePercent(
+                currentPeriod.Count(t => t.Status == TicketStatus.Resolved),
+                previousPeriod.Count(t => t.Status == TicketStatus.Resolved)),
+            InProgressChangePercent = CalcChangePercent(
+                currentPeriod.Count(t => t.Status == TicketStatus.InProgress),
+                previousPeriod.Count(t => t.Status == TicketStatus.InProgress)),
+            ClosedChangePercent = CalcChangePercent(
+                currentPeriod.Count(t => t.Status == TicketStatus.Closed),
+                previousPeriod.Count(t => t.Status == TicketStatus.Closed)),
+            OpenChangePercent = CalcChangePercent(
+                currentPeriod.Count(t => t.Status == TicketStatus.Open),
+                previousPeriod.Count(t => t.Status == TicketStatus.Open)) 
         };
     }
 
