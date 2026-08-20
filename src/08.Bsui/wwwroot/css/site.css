@@ -229,19 +229,44 @@ body {
     border: 1px solid var(--card-border);
     border-radius: 10px;
     padding: 16px;
+    
 }
+    .card i{
+        font-size: 2.5rem;
+    }
+
+    .card .sub-card {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: .5rem;
+        text-align: center;
+    }
 
     .card h6 {
         color: var(--text-muted);
         font-size: 13px;
         font-weight: 500;
-        margin: 0 0 8px;
+        margin: 0;
     }
 
     .card h3 {
         margin: 0;
         font-size: 26px;
     }
+
+
+.link-more {
+    font-size: 13px;
+    color: var(--primary);
+    text-decoration: none;
+    display: inline-block;
+    margin-top: 8px;
+}
+
+.link-more i {
+    font-size: .6rem;
+}
 
 /* Table */
 .table {
@@ -560,3 +585,10 @@ label {
     border-bottom: 1px solid var(--card-border);
 }
 /*PROFILE PAGE END*/
+
+
+/*TEXT CARD DASHBOARD*/
+.stat-change {
+    font-size: .65rem;
+    color: var(--text-muted);
+}
