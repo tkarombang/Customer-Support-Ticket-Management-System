@@ -10,7 +10,7 @@
     <div class="col">
         <div class="card text-center p-3">
             <div class="sub-card">
-                <i class="fa-solid fa-ticket"></i>
+                <i class="fa-solid fa-ticket total-color"></i>
                 <div>
                     <h6>Total Tiket</h6>
                     <h3 id="totalTickets">-</h3>
@@ -22,7 +22,7 @@
     <div class="col">
         <div class="card text-center p-3">
             <div class="sub-card">
-                <i class="fa-solid fa-square-up-right"></i>
+                <i class="fa-solid fa-square-up-right resolved-color"></i>
                 <div>
                     <h6>Resolved</h6>
                     <h3 id="resolvedCount">-</h3>
@@ -34,7 +34,7 @@
     <div class="col">
         <div class="card text-center p-3">
             <div class="sub-card">
-                <i class="fa-solid fa-bars-progress"></i>
+                <i class="fa-solid fa-bars-progress progress-color"></i>
                 <div>
                     <h6>In Progress</h6>
                     <h3 id="inProgressCount">-</h3>
@@ -46,7 +46,7 @@
     <div class="col">
         <div class="card text-center p-3">
             <div class="sub-card">
-                <i class="fa-solid fa-rectangle-xmark"></i>
+                <i class="fa-solid fa-rectangle-xmark closed-color"></i>
                 <div>
                     <h6>Closed</h6>
                     <h3 id="closedCount">-</h3>
@@ -58,7 +58,7 @@
     <div class="col">
         <div class="card text-center p-3">
             <div class="sub-card">
-                <i class="fa-solid fa-folder-open"></i>
+                <i class="fa-solid fa-folder-open open-color"></i>
                 <div>
                     <h6>Open</h6>
                     <h3 id="openCount">-</h3>
@@ -98,7 +98,8 @@
     </div>
 </div>
 
-<div class="report-grid">
+
+@* <div class="report-grid">
     <div class="card span-2">
         <h6>Recent Tickets</h6>
         <table class="table-mini mb-3" id="recentTicketsTable"></table>
@@ -109,8 +110,37 @@
         <div id="activityTimeline"></div>
         <a href="/TicketHistories" class="link-more">Lihat semua riwayat <i class="fa-solid fa-angles-right"></i></a>
     </div>
-</div>
+</div> *@
 
+<div class="report-grid-dashboard">
+    <div class="card span-2">
+        <div class="card-header-custom">
+            <h6>Recent Tickets</h6>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table-mini" id="recentTicketsTable"></table>
+        </div>
+
+        <a href="/Tickets" class="link-more">
+            Lihat semua tiket
+            <i class="fa-solid fa-angles-right"></i>
+        </a>
+    </div>
+
+    <div class="card span-2">
+        <div class="card-header-custom">
+            <h6>Ticket Activities (History)</h6>
+        </div>
+
+        <div id="activityTimeline"></div>
+
+        <a href="/TicketHistories" class="link-more">
+            Lihat semua riwayat
+            <i class="fa-solid fa-angles-right"></i>
+        </a>
+    </div>
+</div>
 
 
 @* <h4>Beban Kerja per Agent</h4>
