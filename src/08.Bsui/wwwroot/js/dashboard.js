@@ -68,9 +68,9 @@ function loadDashboard() {
 
 }
 
-function formatChange(percent) {
-    const arrow = percent >= 0 ? `<i class="fa-solid fa-angles-up" style="font-size: 0.6rem;"></i>` : `<i class="fa-solid fa-angles-down" style="font-size: 0.6rem;"></i>`;
-    const colorClass = percent >= 0 ? 'color: #089de7;' : 'color: #e75208;'
+function formatChangePercent(percent) {
+    const arrow = percent >= 50 ? `<i class="fa-solid fa-angles-up" style="font-size: 0.6rem;"></i>` : `<i class="fa-solid fa-angles-down" style="font-size: 0.6rem;"></i>`;
+    const colorClass = percent >= 50 ? 'color: #089de7;' : 'color: #e75208;'
     return `<span style="${colorClass}">${arrow} ${Math.abs(percent)}%</span> dari periode lalu`
 }
 
@@ -82,11 +82,11 @@ function renderSummary(summary) {
     $('#closedCount').text(summary.closedCount);
     $('#workloadPerAgent').text(summary.workloadPerAgent.length)
 
-    $('#totalChange').html(formatChange(summary.totalChangePercent))
-    $('#resolvedChange').html(formatChange(summary.resolvedChangePercent))
-    $('#inProgressChange').html(formatChange(summary.inProgressChangePercent))
-    $('#closedChange').html(formatChange(summary.closedChangePercent))
-    $('#openChange').html(formatChange(summary.openChangePercent))
+    $('#totalChange').html(formatChangePercent(summary.totalChangePercent))
+    $('#resolvedChange').html(formatChangePercent(summary.resolvedChangePercent))
+    $('#inProgressChange').html(formatChangePercent(summary.inProgressChangePercent))
+    $('#closedChange').html(formatChangePercent(summary.closedChangePercent))
+    $('#openChange').html(formatChangePercent(summary.openChangePercent))
 }
 
 function renderStatusChart(summary) {
@@ -193,14 +193,15 @@ function renderRecentTickets(items) {
             <td><a href="/Tickets/Update?id=${t.ticketId}">${t.ticketNumber}</a></td>
             <td>${t.title}</td>
             <td>${t.customerName}</td>
-            <td><span class="badge bg-primary">${t.status}</span></td>
-            <td>${t.assignedTicketName ?? 'Unassigned'}</td>
+            <td><span class="badge ${statusBadgeClass(t.status)}">${t.status}</span></td>
+            <td>${t.assignedToAgentName ?? 'Unassigned'}</td>
         </tr>
     `).join('')
 
     tbody.html(`
         <tr>
             <th>Ticket Number</th>
+            <th>Title</th>
             <th>Customer</th>
             <th>Status</th>
             <th>Assigned To</th>
@@ -208,10 +209,6 @@ function renderRecentTickets(items) {
     }`)
 }
 
-
-function formatActionLabel(action) {
-    return action.replace(/([a-z])([A-Z])/g, '$1 $2')
-}
 
 function renderActivityTimeline(items) {
     const container = $('#activityTimeline')
@@ -222,23 +219,183 @@ function renderActivityTimeline(items) {
     }
 
     const html = items.map(h => {
-        let label = formatActionLabel(h.action)
-        let detail = h.ticketNumber
+        const activity = getActivityIcon(h.action, h.newStatus)
+
+        let label = formatActionLabel(h.action, h.newStatus)
+        let detail = `Ticket ${h.ticketNumber}`
+
+
         if (h.action === 'StatusChanged' && h.previousStatus && h.newStatus) {
-            detail = `Ticket ${h.ticketNumber} oleh ${h.changeByName}`;
+            detail += `• ${h.previousStatus} → ${h.newStatus}`
+        } 
+
+        if (h.changeByName) {
+            detail += ` • oleh ${h.changeByName}`;
         }
+
 
         return `
             <div class="timeline-item">
-                <div class="timeline-dot"></div>
+                <div class="timeline-dot ${activity.className}">
+                    <i class="${activity.icon} ${activity.className}"></i>
+                </div>
                 <div>
                     <div><b>${label}</b></div>
                     <div class="text-muted" style="font-size:12px;">${detail}</div>
-                    <div class="text-muted" style="font-size:11px;">${new Date(h.timestamp).toLocaleString('id-ID')}</div>
+                    <div class="text-muted" style="font-size:11px;">${formatActivityTime(h.timestamp)}</div>
                 </div>
             </div>
         `
     }).join('')
 
     container.html(html)
+}
+
+
+function formatActionLabel(action, newStatus) {
+    if (!action) return ''
+
+    switch (action) {
+        case 'Created':
+            return 'Ticket created';
+        case 'StatusChanged':
+            return `Status changed to ${formatCamelCase(newStatus)}`;
+        case 'AssigneChanged':
+            return 'Assign Changed';
+        case 'PriorityChanged':
+            return 'Priority Changed';
+        case 'CommentAdded':
+            return 'Comment Added'
+        case 'TicketUpdate':
+            return 'Ticket Update';
+        default:
+            return formatCamelCase(action);
+    }
+}
+
+
+function statusBadgeClass(status) {
+    switch (status) {
+        case 'Open': return 'bg-primary';
+        case 'InProgress': return 'bg-warning';
+        case 'Resolved': return 'bg-success';
+        case 'Closed': return 'bg-secondary';
+        case 'Cancelled': return 'bg-danger';
+        default: return 'bg-secondary';
+    }
+}
+
+
+function getActivityIcon(action, newStatus) {
+
+    switch (action) {
+
+        case 'Created':
+            return {
+                icon: 'fa-solid fa-ticket',
+                className: 'activity-created'
+            };
+
+        case 'StatusChanged':
+
+            switch ((newStatus || '').toLowerCase()) {
+
+                case 'open':
+                    return {
+                        icon: 'fa-solid fa-arrow-right-to-bracket',
+                        className: 'activity-open'
+                    };
+
+                case 'in progress':
+                    return {
+                        icon: 'fa-solid fa-clock',
+                        className: 'activity-progress'
+                    };
+
+                case 'resolved':
+                    return {
+                        icon: 'fa-solid fa-circle-check',
+                        className: 'activity-resolved'
+                    };
+
+                case 'closed':
+                    return {
+                        icon: 'fa-solid fa-check',
+                        className: 'activity-closed'
+                    };
+
+                case 'cancelled':
+                case 'canceled':
+                    return {
+                        icon: 'fa-solid fa-xmark',
+                        className: 'activity-cancelled'
+                    };
+
+                default:
+                    return {
+                        icon: 'fa-solid fa-arrows-rotate',
+                        className: 'activity-default'
+                    };
+            }
+
+        case 'AssigneeChanged':
+            return {
+                icon: 'fa-solid fa-user-check',
+                className: 'activity-assignee'
+            };
+
+        case 'PriorityChanged':
+            return {
+                icon: 'fa-solid fa-flag',
+                className: 'activity-priority'
+            };
+
+        case 'CommentAdded':
+            return {
+                icon: 'fa-solid fa-comment',
+                className: 'activity-comment'
+            };
+
+        case 'TicketUpdated':
+            return {
+                icon: 'fa-solid fa-pen',
+                className: 'activity-updated'
+            };
+
+        default:
+            return {
+                icon: 'fa-solid fa-circle-info',
+                className: 'activity-default'
+            };
+    }
+}
+
+
+
+
+function parseApiDate(timeStamp) {
+    if (!timeStamp) return null
+
+    const normalized = timeStamp.replace(/\.(\d{3})\d+/, '.$1')
+    return new Date(normalized)
+}
+
+function formatActivityTime(timestamp) {
+    const date = parseApiDate(timestamp);
+
+    if (!date || isNaN(date.getTime())) return '-'
+
+    return date.toLocaleString('id-ID', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    });
+}
+
+function formatCamelCase(text) {
+    if (!text) return null
+    return text.replace(/([a-z])([A-Z])/g, '$1 $2')
 }
