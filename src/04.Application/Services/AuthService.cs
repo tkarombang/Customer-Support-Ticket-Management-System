@@ -17,7 +17,7 @@ public class AuthService(
     ISystemLogService systemLogService)
     : IAuthService
 {
-    public async Task<LoginResponseDto> LoginAsync(LoginRequestDto dto)
+    public async Task<LoginResponseDto> LoginAsync(LoginRequestDto dto, string? ipAddress)
     {
         var user = await userRepository.GetByEmailAsync(dto.Email)
             ?? throw new ValidationException("Email", "Email atau password salah.");
@@ -30,7 +30,7 @@ public class AuthService(
 
         var (token, expiresAt) = GenerateJwtToken(user.Id, user.Name, user.Role.ToString());
 
-        await systemLogService.LogAsync(user.Id, SystemLogAction.Login, "Berhasil Login ke sistem");
+        await systemLogService.LogAsync(user.Id, SystemLogAction.Login, "Berhasil Login ke sistem", ipAddress);
 
         return new LoginResponseDto
         {
