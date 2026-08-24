@@ -386,6 +386,11 @@ body {
     color: #b91c1c;
 }
 
+.bg-thernary {
+    background: #e8d3fd;
+    color: #11998a;
+}
+
 .bg-primary {
     background: #dbeafe;
     color: #1d4ed8;

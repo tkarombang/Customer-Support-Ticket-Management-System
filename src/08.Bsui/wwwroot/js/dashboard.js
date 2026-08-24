@@ -260,7 +260,7 @@ function formatActionLabel(action, newStatus) {
             return 'Ticket created';
         case 'StatusChanged':
             return `Status changed to ${formatCamelCase(newStatus)}`;
-        case 'AssigneChanged':
+        case 'AssigneeChanged':
             return 'Assign Changed';
         case 'PriorityChanged':
             return 'Priority Changed';

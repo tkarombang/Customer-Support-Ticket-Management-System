@@ -103,7 +103,7 @@ function renderTable(items) {
         tbody.append(`
             <tr>
                 <td>${h.ticketNumber}</td>
-                <td><span class="badge bg-primary">${formatActionLabel(h.action)}</span></td>
+                <td><span class="badge ${statusBadgeActionClass(h.action)}">${formatActionLabel(h.action)}</span></td>
                 <td>${describeChange(h)}</td>
                 <td>${h.changedByName}</td>
                 <td>${new Date(h.timestamp).toLocaleString('id-ID')}</td>
@@ -133,4 +133,18 @@ function renderPagination(page, totalPages, totalCount) {
 
 function formatActionLabel(action) {
     return action.replace(/([a-z])([A-Z])/g, '$1 $2')
+}
+
+
+function statusBadgeActionClass(status) {
+    switch (status) {
+        case 'Created': return 'bg-primary';
+        case 'StatusChanged': return 'bg-secondary';
+        case 'AssigneeChanged': return 'bg-success';
+        case 'PriorityChanged': return 'bg-warning';
+        case 'CommentAdded': return 'bg-danger';
+        case 'TicketUpdate': return 'bg-thernary';
+
+        default: return 'bg-secondary';
+    }
 }
