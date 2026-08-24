@@ -1,5 +1,6 @@
 ﻿using TicketManagement.Application.Interfaces;
 using TicketManagement.Base.Exceptions;
+using TicketManagement.Domain.Enums;
 using TicketManagement.Domain.Interfaces;
 using TicketManagement.Shared.Dtos.Profile;
 
@@ -7,7 +8,8 @@ namespace TicketManagement.Application.Services;
 
 public class ProfileService(
     IUserRepository userRepository,
-    ISystemLogRepository systemLogRepository)
+    ISystemLogRepository systemLogRepository,
+    ISystemLogService systemLogService)
     : IProfileService
 {
     public async Task<UserResponseDtoForProfile> GetAsync(Guid userId)
@@ -43,12 +45,14 @@ public class ProfileService(
 
         await userRepository.UpdateAsync(user);
 
-        await systemLogRepository.AddAsync(new Domain.Entities.SystemLog
-        {
-            UserId = userId,
-            Action = Domain.Enums.SystemLogAction.UpdateProfile,
-            Description = "Memperbarui informasi profil"
-        });
+        await systemLogService.LogAsync(userId, SystemLogAction.UpdateProfile, "Memperbaharui Informasi Profil");
+
+        //await systemLogRepository.AddAsync(new Domain.Entities.SystemLog
+        //{
+        //    UserId = userId,
+        //    Action = Domain.Enums.SystemLogAction.UpdateProfile,
+        //    Description = "Memperbarui informasi profil"
+        //});
     }
 
     public async Task ChangePasswordAsync(Guid userId, ChangePasswordDto dto)
@@ -64,12 +68,14 @@ public class ProfileService(
 
         await userRepository.UpdateAsync(user);
 
-        await systemLogRepository.AddAsync(new Domain.Entities.SystemLog
-        {
-            UserId = userId,
-            Action = Domain.Enums.SystemLogAction.ChangePassword,
-            Description = "Mengubah password akun"
-        });
+        await systemLogService.LogAsync(userId, SystemLogAction.ChangePassword, "Mengubah password akun");
+
+        //await systemLogRepository.AddAsync(new Domain.Entities.SystemLog
+        //{
+        //    UserId = userId,
+        //    Action = Domain.Enums.SystemLogAction.ChangePassword,
+        //    Description = "Mengubah password akun"
+        //});
     }
 
     public async Task<IEnumerable<ActivityLogDto>> GetActivityLogAsync(Guid userId)

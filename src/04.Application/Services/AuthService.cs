@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using TicketManagement.Application.Interfaces;
 using TicketManagement.Base.Exceptions;
+using TicketManagement.Domain.Enums;
 using TicketManagement.Domain.Interfaces;
 using TicketManagement.Shared.Dtos.Auth;
 
@@ -12,7 +13,8 @@ namespace TicketManagement.Application.Services;
 
 public class AuthService(
     IUserRepository userRepository,
-    IConfiguration configuration)
+    IConfiguration configuration,
+    ISystemLogService systemLogService)
     : IAuthService
 {
     public async Task<LoginResponseDto> LoginAsync(LoginRequestDto dto)
@@ -27,6 +29,8 @@ public class AuthService(
             throw new ValidationException("Email", "Email atau password salah.");
 
         var (token, expiresAt) = GenerateJwtToken(user.Id, user.Name, user.Role.ToString());
+
+        await systemLogService.LogAsync(user.Id, SystemLogAction.Login, "Berhasil Login ke sistem");
 
         return new LoginResponseDto
         {
