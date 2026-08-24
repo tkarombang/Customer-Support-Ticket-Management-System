@@ -67,12 +67,6 @@
             <span id="openChange" class="stat-change">-</span>
         </div>
     </div>
-    @* <div class="col">
-        <div class="card text-center p-3">
-            <h6>Total Users</h6>
-            <h3 id="workloadPerAgent">-</h3>
-        </div>
-    </div> *@
 </div>
 
 
@@ -91,26 +85,12 @@
     </div>
 </div>
 
-<div class="report-grid">
+<div class="report-grid mt-3">
     <div class="card span-4">
         <h4 class="mt-3">Beban Kerja per Agent</h4>
         <div class="chart-container"><canvas id="chartDashAssignee"></canvas></div>
     </div>
 </div>
-
-
-@* <div class="report-grid">
-    <div class="card span-2">
-        <h6>Recent Tickets</h6>
-        <table class="table-mini mb-3" id="recentTicketsTable"></table>
-        <a href="/Tickets" class="link-more">Lihat semua tiket<i class="fa-solid fa-angles-right"></i></a>
-    </div>
-    <div class="card span-2">
-        <h6>Ticket Activities (History)</h6>
-        <div id="activityTimeline"></div>
-        <a href="/TicketHistories" class="link-more">Lihat semua riwayat <i class="fa-solid fa-angles-right"></i></a>
-    </div>
-</div> *@
 
 <div class="report-grid-dashboard">
     <div class="card span-2">
@@ -142,14 +122,6 @@
     </div>
 </div>
 
-
-@* <h4>Beban Kerja per Agent</h4>
-<table class="table table-bordered">
-    <thead>
-        <tr><th>Nama Agent</th><th>Jumlah Tiket Ditugaskan</th></tr>
-    </thead>
-    <tbody id="workloadTableBody"></tbody>
-</table> *@
 
 @section Scripts {
     <script src="~/js/dashboard.js"></script>
