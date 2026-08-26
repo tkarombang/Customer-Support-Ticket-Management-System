@@ -8,7 +8,7 @@ namespace TicketManagement.Application.Interfaces
     public interface IBackupService
     {
         Task<BackupHistoryResponseDto> TriggerManualBackupAsync(Guid triggeredBy);
-        Task RestoreAsync(Stream backupFileStream, string originalFileName);
+        Task RestoreAsync(Stream backupFileStream, string originalFileName, Guid restoredBy);
         Task<IEnumerable<BackupHistoryResponseDto>> GetHistoryAsync();
     }
 }

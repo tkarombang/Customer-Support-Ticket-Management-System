@@ -2,6 +2,7 @@
 using TicketManagement.Application.Interfaces;
 using TicketManagement.Base.Exceptions;
 using TicketManagement.Domain.Entities;
+using TicketManagement.Domain.Enums;
 using TicketManagement.Domain.Interfaces;
 using TicketManagement.Shared.Dtos.Settings;
 
@@ -10,7 +11,8 @@ namespace TicketManagement.Application.Services
     public class SettingsService(
         IAppSettingRepository appSettingRepository,
         IIntegrationConfigRepository integrationRepository,
-        ICredentialEncryptor credentialEncryptor) 
+        ICredentialEncryptor credentialEncryptor,
+        ISystemLogService systemLogService) 
         : ISettingsService
     {
         private const string GeneralKey = "General.Config";
@@ -33,6 +35,8 @@ namespace TicketManagement.Application.Services
                 IsEncrypted = false,
                 UpdatedBy = updatedBy
             });
+
+            await systemLogService.LogAsync(updatedBy, SystemLogAction.UpdateSettings, "Memperbaharui Pengaturan General");
         }
 
         public async Task<SlaSettingDto> GetSlaAsync()
@@ -52,6 +56,9 @@ namespace TicketManagement.Application.Services
                 IsEncrypted = false,
                 UpdatedBy = updatedBy
             });
+
+            await systemLogService.LogAsync(updatedBy, SystemLogAction.UpdateSettings, "Memperbaharui Pengaturan SLA");
+
         }
 
 

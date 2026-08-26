@@ -1,13 +1,16 @@
-﻿using TicketManagement.Application.Interfaces;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using TicketManagement.Application.Interfaces;
 using TicketManagement.Domain.Entities;
 using TicketManagement.Domain.Interfaces;
+using TicketManagement.Domain.Enums;
 using TicketManagement.Shared.Dtos.Settings;
 
 namespace TicketManagement.Application.Services
 {
     public class BackupService(
     IBackupRepository backupRepository,
-    IBackupHistoryRepository backupHistoryRepository) // repository baru, lihat catatan di bawah
+    IBackupHistoryRepository backupHistoryRepository,
+    ISystemLogService systemLogService)
     : IBackupService
     {
         public async Task<BackupHistoryResponseDto> TriggerManualBackupAsync(Guid triggeredBy)
@@ -46,10 +49,14 @@ namespace TicketManagement.Application.Services
             }
 
             await backupHistoryRepository.AddAsync(history);
+
+            await systemLogService.LogAsync(triggeredBy, SystemLogAction.BackupDatabase,
+                history.Status == "Success" ? $"Backup Berhasil: {fileName}" : "Backup Gagal");
+
             return MapToDto(history);
         }
 
-        public async Task RestoreAsync(Stream backupFileStream, string originalFileName)
+        public async Task RestoreAsync(Stream backupFileStream, string originalFileName, Guid restoredBy)
         {
             var backupFolder = GetBackupFolder();
 
@@ -64,6 +71,8 @@ namespace TicketManagement.Application.Services
             try
             {
                 await backupRepository.RestoreDatabaseAsync(tempPath);
+
+                await systemLogService.LogAsync(restoredBy, SystemLogAction.RestoreDatabase, $"Restore database dari file {originalFileName}");
             }
             finally
             {

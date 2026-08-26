@@ -66,9 +66,6 @@ public class SettingsController(
         return Ok(updated);
     }
 
-    private Guid GetCurrentUserId() =>
-        Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
-
     [HttpPost(ApiRoutes.Settings.Backup)]
     public async Task<IActionResult> TriggerBackup()
     {
@@ -88,9 +85,8 @@ public class SettingsController(
     public async Task<IActionResult> Restore(IFormFile file)
     {
         if (file.Length == 0) return BadRequest(new { message = "File backup tidak boleh kosong." });
-
         await using var stream = file.OpenReadStream();
-        await backupService.RestoreAsync(stream, file.FileName);
+        await backupService.RestoreAsync(stream, file.FileName, GetCurrentUserId());
 
         return Ok(new { message = "Restore berhasil. Aplikasi mungkin perlu di-restart." });
     }
@@ -101,4 +97,8 @@ public class SettingsController(
         var result = await systemLogQueryService.GetFilteredAsync(filter);
         return Ok(result);
     }
+
+    private Guid GetCurrentUserId() =>
+    Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
 }
