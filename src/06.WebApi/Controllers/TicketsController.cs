@@ -29,7 +29,8 @@ public class TicketsController(ITicketService ticketService) : ControllerBase
     [HttpPost]
     public async Task<ActionResult<TicketResponseDto>> Create(CreateTicketDto dto)
     {
-        var created = await ticketService.CreateAsync(dto);
+        var userId = GetCurrentUserId();
+        var created = await ticketService.CreateAsync(dto, userId);
         return CreatedAtAction(nameof(GetById), new { id = created.TicketId }, created);
     }
 

@@ -13,7 +13,8 @@ public class TicketService(
     IUserRepository userRepository,
     IFileStorageService fileStorageService,
     ITicketAttachmentRepository attachmentRepository,
-    ITicketSequenceRepository ticketSequenceRepository)
+    ITicketSequenceRepository ticketSequenceRepository,
+    ISystemLogService systemLogService)
     : ITicketService
 {
     public async Task<IEnumerable<TicketResponseDto>> GetAllAsync()
@@ -29,7 +30,7 @@ public class TicketService(
         return MapToDto(ticket);
     }
 
-    public async Task<TicketResponseDto> CreateAsync(CreateTicketDto dto)
+    public async Task<TicketResponseDto> CreateAsync(CreateTicketDto dto, Guid CreatedBy)
     {
         // REQ-2.2: Auto-generate TicketNumber format TKT-00001
         var currentYear = DateTime.UtcNow.Year;
@@ -64,12 +65,15 @@ public class TicketService(
 
         var created = await ticketRepository.AddAsync(ticket);
 
+
         if (dto.CcUserIds is { Count: > 0 })
         {
             foreach (var userId in dto.CcUserIds)
                 created.CcUsers.Add(new TicketCc { TicketId = created.Id, UserId = userId });
             await ticketRepository.UpdateAsync(created);
         }
+
+        await systemLogService.LogAsync(CreatedBy, SystemLogAction.CreateTicket, "Berhasil Membuat Tiket");
 
         return MapToDto(created);
     }
