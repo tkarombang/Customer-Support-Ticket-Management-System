@@ -7,7 +7,10 @@ using TicketManagement.Shared.Dtos.Users;
 
 namespace TicketManagement.Application.Services;
 
-public class UserService(IUserRepository userRepository) : IUserService
+public class UserService(
+    IUserRepository userRepository,
+    ISystemLogService systemLogService
+    ) : IUserService
 {
     public async Task<IEnumerable<UserResponseDto>> GetAllAsync()
     {
@@ -15,7 +18,7 @@ public class UserService(IUserRepository userRepository) : IUserService
         return users.Select(MapToDto);
     }
 
-    public async Task<UserResponseDto> CreateAsync(CreateUserDto dto)
+    public async Task<UserResponseDto> CreateAsync(CreateUserDto dto, Guid createdBy)
     {
         var existing = await userRepository.GetByEmailAsync(dto.Email);
         if (existing is not null)
@@ -35,10 +38,12 @@ public class UserService(IUserRepository userRepository) : IUserService
         };
 
         var created = await userRepository.AddAsync(user);
+
+        await systemLogService.LogAsync(createdBy, SystemLogAction.CreateUser, "Berhasil membuat User");
         return MapToDto(created);
     }
 
-    public async Task<UserResponseDto> UpdateAsync(Guid id, UpdateUserDto dto)
+    public async Task<UserResponseDto> UpdateAsync(Guid id, UpdateUserDto dto, Guid updatedBy)
     {
         var user = await userRepository.GetByIdAsync(id)
             ?? throw new NotFoundException("User", id);
@@ -54,6 +59,8 @@ public class UserService(IUserRepository userRepository) : IUserService
         user.UpdatedDate = DateTime.UtcNow;
 
         await userRepository.UpdateAsync(user);
+
+        await systemLogService.LogAsync(updatedBy, SystemLogAction.UpdateSettings, "Berhasil Memperbaharui User");
         return MapToDto(user);
     }
 
