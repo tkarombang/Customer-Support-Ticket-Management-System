@@ -310,7 +310,16 @@ public class TicketApiClient(HttpClient httpClient) : ITicketApiClient
     {
         AttachToken(token);
 
-        var url = $"{ApiRoutes.Settings.Base}/{ApiRoutes.Settings.SystemLogs}";
+        var query = HttpUtility.ParseQueryString(string.Empty);
+        if (filter.StartDate.HasValue) query["StartDate"] = filter.StartDate.Value.ToString("O");
+        if (filter.EndDate.HasValue) query["EndDate"] = filter.EndDate.Value.ToString("O");
+        if (!string.IsNullOrWhiteSpace(filter.Action)) query["Action"] = filter.Action;
+        if (filter.UserId.HasValue) query["UserId"] = filter.UserId.Value.ToString();
+        if (!string.IsNullOrWhiteSpace(filter.SearchTerm)) query["SearchTerm"] = filter.SearchTerm;
+        query["PageNumber"] = filter.PageNumber.ToString();
+        query["PageSize"] = filter.PageSize.ToString();
+
+        var url = $"{ApiRoutes.Settings.Base}/{ApiRoutes.Settings.SystemLogs}?{query}";
         return await httpClient.GetFromJsonAsync<PagedResult<SystemLogItemDto>?>(
             url, JsonOptions);
     }

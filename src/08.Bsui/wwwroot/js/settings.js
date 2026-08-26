@@ -373,6 +373,16 @@ function loadLogs(page) {
             </tr>`))
 
             $('#logPaginationInfo').text(`Halaman ${result.pageNumber} dari ${result.totalPages} (${result.totalCount} total log)`)
+        },
+        error: function () {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: 'Gagal Memuat hasil filter.',
+                showConfirmButton: false,
+                timer: 3000
+            });
         }
     })
 }
