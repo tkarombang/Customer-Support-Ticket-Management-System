@@ -94,7 +94,7 @@ function renderSummary(tickets) {
     $("#totalTickets").text(tickets.length)
     $("#openCount").text(tickets.filter(t => t.status === "Open").length)
     $("#inProgressCount").text(tickets.filter(t => t.status === "InProgress").length)
-    $("#closedCount").text(tickets.filter(t => t.status === "Clossed").length)
+    $("#closedCount").text(tickets.filter(t => t.status === "Closed").length)
     $("#cancelledCount").text(tickets.filter(t => t.status === "Cancelled").length)
 }
 
