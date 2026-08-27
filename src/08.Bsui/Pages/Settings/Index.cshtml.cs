@@ -8,10 +8,12 @@ namespace TicketManagement.Bsui.Pages.Settings;
 public class IndexModel(ITicketApiClient apiClient) : PageModel
 {
     private string Token => HttpContext.Session.GetString("Token")!;
-    public IActionResult OnGet()
+    public IActionResult OnGet(string? tab)
     {
         if (HttpContext.Session.GetString("Role") != "Administrator")
             return RedirectToPage("/Login");
+
+        ViewData["InitialTab"] = tab ?? "general";
         return Page();
     }
 

@@ -3,7 +3,7 @@
 }
 
 $(document).ready(function () {
-    switchTab('general')
+    switchTab(initialTab)
     $('.tab-btn').on('click', function () {
         switchTab($(this).data('tab'))
     })
