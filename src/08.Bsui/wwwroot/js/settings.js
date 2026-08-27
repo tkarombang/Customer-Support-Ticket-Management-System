@@ -2,6 +2,7 @@
     return $('input[name="__RequestVerificationToken"]').val()
 }
 
+
 $(document).ready(function () {
     switchTab(initialTab)
     $('.tab-btn').on('click', function () {
@@ -208,6 +209,13 @@ $(document).ready(function () {
         loadLogs(1)
     })
 
+
+    $(document).on('click', '.log-page-btn', function () {
+        const page = $(this).data('page')
+        loadLogs(page)
+    })
+
+
 })
 
 function switchTab(tabName) {
@@ -307,7 +315,8 @@ function loadBackupHistory() {
                     <tr>
                         <td colspan="5" class="text-center">Belum ada riwayat backup</td>
                     </tr>
-                    return`)
+                    `)
+                return
             }
 
             list.forEach(b => {
@@ -331,7 +340,7 @@ function loadBackupHistory() {
 
 
 // SYSTEM LOGS
-function loadLogs(page) {
+function loadLogs(page = 1) {
     Swal.fire({
         title: 'Memuat Data...',
         html: 'Mohon tunggu sebentar.',
@@ -345,7 +354,8 @@ function loadLogs(page) {
     const params = {
         SearchTerm: $('#log-search').val(),
         Action: $('#log-action').val(),
-        PageNumber: page, PageSize: 10
+        PageNumber: page,
+        PageSize: 10
     }
     $.ajax({
         url: '/Settings?handler=SystemLogs',
@@ -361,18 +371,18 @@ function loadLogs(page) {
                 <tr>
                     <td colspan="5" class='text-center'>Tidak Ada Log</td>
                 </tr>`)
+            } else {
+                result.items.forEach(l => tbody.append(`
+                <tr>
+                    <td>${l.userName ?? 'System'}</td>
+                    <td><span class="badge bg-primary">${l.action}</span></td>
+                    <td>${l.description}</td>
+                    <td>${l.ipAddress ?? '-'}</td>
+                    <td>${new Date(l.timestamp).toLocaleString('id-ID')}</td>
+                </tr>`))
             }
 
-            result.items.forEach(l => tbody.append(`
-            <tr>
-                <td>${l.userName ?? 'System'}</td>
-                <td><span class="badge bg-primary">${l.action}</span></td>
-                <td>${l.description}</td>
-                <td>${l.ipAddress ?? '-'}</td>
-                <td>${new Date(l.timestamp).toLocaleString('id-ID')}</td>
-            </tr>`))
-
-            $('#logPaginationInfo').text(`Halaman ${result.pageNumber} dari ${result.totalPages} (${result.totalCount} total log)`)
+            renderLogPagination(result.pageNumber, result.totalPages, result.totalCount)
         },
         error: function () {
             Swal.fire({
@@ -385,4 +395,23 @@ function loadLogs(page) {
             });
         }
     })
+}
+
+
+function renderLogPagination(pageNumber, totalPages, totalCount) {
+    $('#logPaginationInfo').text(`Halaman ${pageNumber} dari ${totalPages} (${totalCount} total log)`)
+    const container = $('#logPaginationButton')
+    container.empty()
+
+    if (totalPages <= 1) return
+
+    for (let i = 1; i <= totalPages; i++) {
+        const activeClass = i === pageNumber ? 'btn-primary' : 'btn-outline-secondary'
+        container.append(`<button
+                type="button"
+                class="btn ${activeClass} btn-sm log-page-btn"
+                data-page="${i}">
+                ${i}
+            </button>`)
+    }
 }
