@@ -143,8 +143,12 @@ function loadActivityLog() {
                     .html('<tr><td>Belum ada aktivitas</td></tr>');
                 return;
             }
+
             const rows = logs.map(l =>
-                `<tr>
+                `<tr calss="activity-item">
+                    <td class="activity-icon" style="background:${actionColor(l.action)}10; color:${actionColor(l.action)};">
+                        <i class="fa-solid ${actionIcon(l.action)}"></i>
+                    </td>
                     <td>${l.description}</td>
                     <td>${new Date(l.timestamp).toLocaleString('id-ID')}</td>
                 </tr>`
@@ -152,11 +156,35 @@ function loadActivityLog() {
             $('#activityTable')
                 .html(`
                 <tr>
+                    <th></th>
                     <th>Aktivitas</th>
                     <th>Waktu</th>
                 </tr>${rows}`);
         }
     })
+}
+
+function actionIcon(action) {
+    switch (action) {
+        case 'Login': return 'fa-right-to-bracket';
+        case 'UpdateProfile': return 'fa-user-pen';
+        case 'ChangePassword': return 'fa-key';
+        case 'ChangeTicket': return 'fa-ticket';
+        case 'UpdateTicket': return 'fa-pen-to-square';
+        default: return 'fa-circle-info';
+    }
+}
+
+
+function actionColor(action) {
+    switch (action) {
+        case 'Login': return '#2563eb';
+        case 'UpdateProfile': return '#7c3aed';
+        case 'ChangePassword': return '#f59e0b';
+        case 'ChangeTicket': return '#16a34a';
+        case 'UpdateTicket': return '#fffff';
+        default: return '#64748b';
+    }
 }
 
 
