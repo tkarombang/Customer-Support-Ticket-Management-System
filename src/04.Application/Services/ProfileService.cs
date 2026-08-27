@@ -80,7 +80,7 @@ public class ProfileService(
 
     public async Task<IEnumerable<ActivityLogDto>> GetActivityLogAsync(Guid userId)
     {
-        var logs = await systemLogRepository.GetByUserIdAsync(userId, take: 10);
+        var logs = await systemLogRepository.GetByUserIdAsync(userId, take: 5);
         return logs.Select(l => new ActivityLogDto
         {
             Action = l.Action.ToString(),
