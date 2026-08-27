@@ -149,8 +149,8 @@ function loadActivityLog() {
                     <td class="activity-icon" style="background:${actionColor(l.action)}10; color:${actionColor(l.action)};">
                         <i class="fa-solid ${actionIcon(l.action)}"></i>
                     </td>
-                    <td>${l.description}</td>
-                    <td>${new Date(l.timestamp).toLocaleString('id-ID')}</td>
+                    <td class="activity-desc">${l.description}</td>
+                    <td class="activity-time">${new Date(l.timestamp).toLocaleString('id-ID')}</td>
                 </tr>`
             ).join('');
             $('#activityTable')
@@ -160,6 +160,9 @@ function loadActivityLog() {
                     <th>Aktivitas</th>
                     <th>Waktu</th>
                 </tr>${rows}`);
+        },
+        error: function (xhr) {
+            if (xhr.status === 401) window.location.href = '/Logini'
         }
     })
 }
