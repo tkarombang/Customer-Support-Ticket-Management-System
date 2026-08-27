@@ -1,4 +1,5 @@
 using TicketManagement.Infrastructure;
+using TicketManagement.WebApi.Converters;
 using TicketManagement.WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,6 +14,11 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerDocumentation();
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.Converters.Add(new UtcDateTimeConverter());
+    });
 
 var app = builder.Build();
 
