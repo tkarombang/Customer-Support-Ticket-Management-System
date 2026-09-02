@@ -14,20 +14,24 @@ public class TicketService(
     IFileStorageService fileStorageService,
     ITicketAttachmentRepository attachmentRepository,
     ITicketSequenceRepository ticketSequenceRepository,
-    ISystemLogService systemLogService)
+    ISystemLogService systemLogService,
+    IAppSettingRepository appSettingRepository)
     : ITicketService
 {
     public async Task<IEnumerable<TicketResponseDto>> GetAllAsync()
     {
         var tickets = await ticketRepository.GetAllAsync();
-        return tickets.Select(MapToDto);
+        var slaSetting = await GetSlaSettingAsync();
+        return tickets.Select(t => MapToDto(t, slaSetting));
     }
 
     public async Task<TicketResponseDto> GetByIdAsync(Guid id)
     {
         var ticket = await ticketRepository.GetByIdAsync(id)
             ?? throw new NotFoundException("Ticket", id);
-        return MapToDto(ticket);
+
+        var slaSetting = await GetSlaSettingAsync();
+        return MapToDto(ticket, slaSetting);
     }
 
     public async Task<TicketResponseDto> CreateAsync(CreateTicketDto dto, Guid CreatedBy)
@@ -73,9 +77,11 @@ public class TicketService(
             await ticketRepository.UpdateAsync(created);
         }
 
+        var slaSetting = await GetSlaSettingAsync();
+
         await systemLogService.LogAsync(CreatedBy, SystemLogAction.CreateTicket, "Berhasil Membuat Tiket");
 
-        return MapToDto(created);
+        return MapToDto(created, slaSetting);
     }
 
     public async Task<TicketResponseDto> UpdateAsync(Guid id, UpdateTicketDto dto, Guid changedByUserId)
@@ -154,8 +160,10 @@ public class TicketService(
             });
         }
 
+        var slaSetting = await GetSlaSettingAsync();
+
         await ticketRepository.UpdateAsync(ticket);
-        return MapToDto(ticket);
+        return MapToDto(ticket, slaSetting);
     }
 
     public async Task<TicketResponseDto> AssignAsync(Guid id, AssignTicketDto dto, Guid changedByUserId)
@@ -182,8 +190,10 @@ public class TicketService(
             ChangedBy = changedByUserId
         });
 
+        var slaSetting = await GetSlaSettingAsync();
         await ticketRepository.UpdateAsync(ticket);
-        return MapToDto(ticket);
+
+        return MapToDto(ticket, slaSetting);
     }
 
     public async Task<TicketAttachmentResponseDto> UploadAttachmentAsync(Guid ticketId, IFormFile file, Guid uploadedBy)
@@ -216,7 +226,20 @@ public class TicketService(
         };
     }
 
-    private static TicketResponseDto MapToDto(Ticket ticket) => new()
+    private async Task<(int High, int Medium, int Low)> GetSlaSettingAsync()
+    {
+        var setting = await appSettingRepository.GetByKeyAsync("Sla.Config");
+        if (setting?.SettingValue is null) return (4, 24, 72); // default sesuai SlaSettingDto
+
+        var parsed = System.Text.Json.JsonSerializer.Deserialize<System.Text.Json.JsonElement>(setting.SettingValue);
+        return (
+            parsed.GetProperty("HighPriorityHours").GetInt32(),
+            parsed.GetProperty("MediumPriorityHours").GetInt32(),
+            parsed.GetProperty("LowPriorityHours").GetInt32()
+        );
+    }
+
+    private static TicketResponseDto MapToDto(Ticket ticket, (int High, int Medium, int Low) sla) => new()
     {
         Type = ticket.Type.ToString(),
         Impact = ticket.Impact.ToString(),
@@ -234,6 +257,7 @@ public class TicketService(
         AssignedToUserId = ticket.AssignedTo,
         AssignedToAgentName = ticket.AssignedAgent?.Name,
         CreatedDate = ticket.CreatedDate,
-        UpdatedDate = ticket.UpdatedDate
+        UpdatedDate = ticket.UpdatedDate,
+        IsOverdue = ticket.IsOverdue(sla.High, sla.Medium, sla.Low)
     };
 }

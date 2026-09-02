@@ -21,4 +21,5 @@ public class TicketResponseDto
     public DateTime? UpdatedDate { get; set; }
     public List<TicketAttachmentResponseDto> Attachments { get; set; } = [];
     public List<TicketCommentResponseDto> Comments { get; set; } = [];
+    public bool IsOverdue { get; set; }
 }
