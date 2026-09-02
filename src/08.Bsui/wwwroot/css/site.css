@@ -865,3 +865,11 @@ label {
     text-align: center;
 }
 
+/* IS-OVERDUE */
+.is-overdue{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+}
+

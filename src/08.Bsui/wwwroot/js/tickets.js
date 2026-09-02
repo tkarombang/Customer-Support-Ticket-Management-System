@@ -137,7 +137,10 @@ function renderTickets(tickets) {
                 <td><a href="/Tickets/Update?id=${t.ticketId}">${t.ticketNumber}</a></td>
                 <td>${t.title}</td>
                 <td>${t.customerName}</td>
-                <td><span class="badge ${statusBadgeClass(t.status)}">${formatActionLabel(t.status)}</span></td>
+                <td class="is-overdue">
+                    <span class="badge ${statusBadgeClass(t.status)}">${formatActionLabel(t.status)}</span>
+                    ${t.isOverdue ? '<span class="badge bg-danger">⚠ Overdue</span>' : ''}
+                </td>
                 <td><span class="badge ${priorityBadgeClass(t.priority)}">${t.priority}</span></td>
                 <td>${t.assignedToAgentName ?? '-'}</td>
                 <td>${createdDate}</td>
