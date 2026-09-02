@@ -29,4 +29,30 @@ public class Ticket : BaseEntity
     public ICollection<TicketCc> CcUsers { get; set; } = [];
 
     public bool IsModifiable() => Status != TicketStatus.Closed;
+
+
+    /// <summary>
+    /// Cek apakah tiket sudah melewati batas waktu penyelesaian.
+    /// Prioritas pengecekan: DueDate manual (jika diisi) > SLA otomatis dari Priority.
+    /// Hanya relevan untuk tiket yang masih aktif (Open/InProgres).
+    /// </summary>
+    public bool IsOverdue(int slaHighHours, int slaMediumHours, int slaLowHours)
+    {
+        if (Status != TicketStatus.Open && Status != TicketStatus.InProgress)
+            return false;
+
+        if (DueDate.HasValue)
+            return DateTime.UtcNow > DueDate.Value;
+
+        var targetHours = Priority switch
+        {
+            TicketPriority.High => slaHighHours,
+            TicketPriority.Medium => slaMediumHours,
+            _ => slaLowHours
+        };
+
+        return (DateTime.UtcNow - CreatedDate).TotalHours > targetHours;
+    }
+
+
 }
